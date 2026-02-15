@@ -112,6 +112,9 @@ agrisense-ai/
 | [PRD](docs/PRD.md) | Product requirements, features, data models, release plan |
 | [Design Guide](docs/DESIGN_GUIDE.md) | Color palette, typography, components, CSS variables |
 | [Coding Rules](docs/CODING_RULES.md) | SOLID, DRY, KISS, naming conventions, AI tool instructions |
+| [Landing Page PRD](docs/LANDING_PAGE_PRD.md) | Landing page sections, components, SEO, accessibility |
+| [Implementation Plan](docs/IMPLEMENTATION_PLAN.md) | 6-phase development plan with exit criteria |
+| [Deployment Plan](docs/DEPLOYMENT_PLAN.md) | CI/CD pipeline, CDK stacks, GitHub Actions, Amplify |
 
 ---
 
