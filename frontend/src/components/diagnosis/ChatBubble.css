@@ -1,0 +1,131 @@
+/* Chat Bubble styles */
+
+.chat-bubble {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0;
+  max-width: 85%;
+  word-wrap: break-word;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.chat-bubble.assistant {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.chat-content {
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 4px;
+}
+
+.chat-bubble.user .chat-content {
+  background-color: var(--color-leaf-green);
+  color: var(--color-dark-forest);
+}
+
+.chat-bubble.assistant .chat-content {
+  background: var(--glass-dark);
+  color: var(--color-white);
+  backdrop-filter: var(--backdrop-blur);
+}
+
+.chat-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.chat-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.chat-timestamp {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 4px;
+  padding: 0 4px;
+}
+
+/* Diagnosis Result Card */
+
+.diagnosis-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.diagnosis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.diagnosis-condition {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.diagnosis-confidence {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.diagnosis-severity {
+  border-left: 3px solid;
+  padding-left: 8px;
+  margin: 8px 0;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.diagnosis-treatment {
+  margin-top: 8px;
+}
+
+.diagnosis-treatment strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.diagnosis-treatment ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.diagnosis-treatment li {
+  margin: 4px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
