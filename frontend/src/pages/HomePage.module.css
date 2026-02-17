@@ -1,0 +1,92 @@
+/* Styles for HomePage — weather dashboard layout. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+  padding-bottom: calc(var(--space-lg) + 64px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.sectionHeading {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+}
+
+.alerts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.current,
+.forecast {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.centeredState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60dvh;
+  gap: var(--space-lg);
+}
+
+.stateMessage {
+  font-size: 14px;
+  color: var(--color-medium-gray);
+  text-align: center;
+  max-width: 280px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(132, 204, 22, 0.2);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .page {
+    padding: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas:
+      'alerts alerts'
+      'current forecast';
+    padding: var(--space-2xl);
+  }
+
+  .alerts {
+    grid-area: alerts;
+  }
+
+  .current {
+    grid-area: current;
+  }
+
+  .forecast {
+    grid-area: forecast;
+  }
+}

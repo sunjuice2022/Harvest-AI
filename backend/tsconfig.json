@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@agrisense/shared": ["../shared/index.ts"]
+    }
+  },
+  "include": ["src", "tests"]
+}

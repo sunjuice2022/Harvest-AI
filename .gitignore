@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.js.map
+*.d.ts
+coverage/
+.vite/
+cdk.out/
