@@ -1,0 +1,379 @@
+/**
+ * HomePage styles — glassmorphism dark-green theme
+ * Reference: docs/DESIGN_GUIDE.md
+ */
+
+/* ── Page shell ─────────────────────────────────────────────────────────── */
+
+.home-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0d1a02 0%, #1a2e05 45%, #2d4a0e 100%);
+  color: var(--color-white);
+  font-family: var(--font-primary);
+}
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+
+.home-hero {
+  position: relative;
+  text-align: center;
+  padding: 80px var(--spacing-xl) 64px;
+  overflow: hidden;
+}
+
+/* Radial green glow behind the logo */
+.home-hero::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(132, 204, 22, 0.13) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+/* Decorative horizontal divider line after hero */
+.home-hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 800px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(132, 204, 22, 0.25),
+    transparent
+  );
+}
+
+.home-hero__logo {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: var(--spacing-xl);
+  display: inline-block;
+  filter: drop-shadow(0 0 28px rgba(132, 204, 22, 0.45));
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.home-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-lg);
+  text-shadow: 0 0 60px rgba(132, 204, 22, 0.2);
+}
+
+.home-hero__title span {
+  color: var(--color-leaf-green);
+}
+
+.home-hero__subtitle {
+  font-size: clamp(14px, 2vw, 17px);
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 520px;
+  margin: 0 auto var(--spacing-2xl);
+  line-height: 1.65;
+}
+
+/* Live badge strip */
+.home-hero__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  background: rgba(132, 204, 22, 0.1);
+  border: 1px solid rgba(132, 204, 22, 0.25);
+  font-size: var(--text-body-small);
+  color: var(--color-leaf-green);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.home-hero__meta-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-leaf-green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+/* ── Features section ───────────────────────────────────────────────────── */
+
+.home-features {
+  padding: var(--spacing-2xl) clamp(16px, 4vw, 48px) 80px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.home-features__heading {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-sage);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  opacity: 0.8;
+}
+
+.home-features__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+}
+
+/* ── Feature card ───────────────────────────────────────────────────────── */
+
+.feature-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-xl);
+  border-radius: 20px;
+  background: rgba(26, 46, 5, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  min-height: 220px;
+}
+
+/* Inner gloss sheen */
+.feature-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 55%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ─ Live card ─ */
+.feature-card--live {
+  border-color: rgba(132, 204, 22, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(132, 204, 22, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(132, 204, 22, 0.12);
+  cursor: pointer;
+}
+
+.feature-card--live:hover {
+  transform: translateY(-6px);
+  border-color: rgba(132, 204, 22, 0.6);
+  box-shadow:
+    0 0 0 1px rgba(132, 204, 22, 0.35),
+    0 20px 48px rgba(132, 204, 22, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(132, 204, 22, 0.2);
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ─ Coming-soon card ─ */
+.feature-card--soon {
+  opacity: 0.72;
+  cursor: default;
+}
+
+.feature-card--soon:hover {
+  transform: translateY(-3px);
+  opacity: 0.85;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+}
+
+/* ─ Icon bubble ─ */
+.feature-card__icon {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(132, 204, 22, 0.08);
+  border: 1px solid rgba(132, 204, 22, 0.18);
+  flex-shrink: 0;
+}
+
+.feature-card--live .feature-card__icon {
+  background: rgba(132, 204, 22, 0.15);
+  border-color: rgba(132, 204, 22, 0.38);
+  box-shadow: 0 0 16px rgba(132, 204, 22, 0.12);
+}
+
+/* ─ Card body ─ */
+.feature-card__body {
+  flex: 1;
+  width: 100%;
+}
+
+.feature-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.feature-card__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-white);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ─ Status badge ─ */
+.feature-card__badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.feature-card__badge--live {
+  background: rgba(132, 204, 22, 0.18);
+  color: var(--color-leaf-green);
+  border: 1px solid rgba(132, 204, 22, 0.38);
+}
+
+.feature-card__badge--coming-soon {
+  background: rgba(168, 162, 158, 0.12);
+  color: var(--color-medium-gray);
+  border: 1px solid rgba(168, 162, 158, 0.2);
+}
+
+/* ─ Description ─ */
+.feature-card__description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ─ Arrow CTA (live only) ─ */
+.feature-card__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background: var(--color-leaf-green);
+  color: var(--color-dark-forest);
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: var(--spacing-lg);
+  align-self: flex-end;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.feature-card--live:hover .feature-card__arrow {
+  transform: translateX(4px);
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.home-footer {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-xl) 40px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 1200px) {
+  .home-features__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .home-features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-hero {
+    padding: 64px var(--spacing-lg) 48px;
+  }
+}
+
+@media (max-width: 540px) {
+  .home-hero {
+    padding: 48px var(--spacing-lg) 40px;
+  }
+
+  .home-hero__logo {
+    font-size: 48px;
+  }
+
+  .home-features {
+    padding: var(--spacing-xl) var(--spacing-lg) 60px;
+  }
+
+  .home-features__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-card {
+    min-height: auto;
+  }
+}

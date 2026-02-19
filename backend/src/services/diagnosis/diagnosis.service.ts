@@ -2,9 +2,10 @@
  * Diagnosis service - handles crop analysis via Bedrock Claude
  */
 
-import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
+import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
+import type { ContentBlock } from "@aws-sdk/client-bedrock-runtime";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
-import type { DiagnosisResult, ChatMessage } from "@agrisense/shared";
+import type { DiagnosisResult, ChatMessage } from "@harvest-ai/shared";
 
 const SYSTEM_PROMPT_TEMPLATE = `You are an expert agricultural diagnostic AI assistant. Your role is to analyze crop images and text descriptions to identify:
 1. Plant diseases and infections
@@ -43,19 +44,6 @@ interface DiagnosisServiceConfig {
   region?: string;
 }
 
-interface BedrockMessageContent {
-  type: "text" | "image";
-  text?: string;
-  source?: {
-    type: "base64";
-    media_type: string;
-    data: string;
-  };
-}
-
-interface BedrockResponse {
-  content?: Array<{ text: string }>;
-}
 
 export class DiagnosisService {
   private bedrockClient: BedrockRuntimeClient;
@@ -66,73 +54,37 @@ export class DiagnosisService {
     this.modelId = DIAGNOSIS_CONSTANTS.BEDROCK_MODEL_ID;
   }
 
-  async diagnoseCrop(message: string, imageBase64?: string, conversationHistory?: ChatMessage[]): Promise<DiagnosisResult> {
-    const systemPrompt = this.buildSystemPrompt();
-    const userPrompt = this.buildUserPrompt(message, conversationHistory);
-
-    const requestBody = {
-      anthropic_version: "bedrock-2023-06-01",
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages: [
-        {
-          role: "user" as const,
-          content: this.buildMessageContent(message, imageBase64),
-        },
-      ],
-    };
-
-    const command = new InvokeModelCommand({
+  async diagnoseCrop(message: string, imageBase64?: string, _conversationHistory?: ChatMessage[]): Promise<DiagnosisResult> {
+    const command = new ConverseCommand({
       modelId: this.modelId,
-      contentType: "application/json",
-      body: JSON.stringify(requestBody),
+      system: [{ text: SYSTEM_PROMPT_TEMPLATE }],
+      messages: [{ role: "user", content: this.buildConverseContent(message, imageBase64) }],
+      inferenceConfig: { maxTokens: 1024 },
     });
 
     const response = await this.bedrockClient.send(command);
-    const responseText = JSON.parse(new TextDecoder().decode(response.body));
-
-    return this.parseBedrockResponse(responseText as BedrockResponse, message);
+    const firstBlock = response.output?.message?.content?.[0];
+    const text = (firstBlock && "text" in firstBlock) ? firstBlock.text : "";
+    return this.parseResponseText(text, message);
   }
 
-  private buildSystemPrompt(): string {
-    return SYSTEM_PROMPT_TEMPLATE;
-  }
-
-  private buildUserPrompt(message: string, _conversationHistory?: ChatMessage[]): string {
-    return message;
-  }
-
-  private buildMessageContent(message: string, imageBase64?: string): BedrockMessageContent[] {
-    const content: BedrockMessageContent[] = [];
+  private buildConverseContent(message: string, imageBase64?: string): ContentBlock[] {
+    const content: ContentBlock[] = [];
 
     if (imageBase64) {
-      content.push({
-        type: "image" as const,
-        source: {
-          type: "base64" as const,
-          media_type: "image/jpeg",
-          data: imageBase64,
-        },
-      });
+      content.push({ image: { format: "jpeg", source: { bytes: Buffer.from(imageBase64, "base64") } } });
     }
 
-    content.push({
-      type: "text" as const,
-      text: message,
-    });
-
+    content.push({ text: message });
     return content;
   }
 
-  private parseBedrockResponse(response: BedrockResponse, userMessage: string): DiagnosisResult {
+  private parseResponseText(text: string, userMessage: string): DiagnosisResult {
     try {
-      const content = response.content?.[0]?.text || String(response.content);
-      const parsed = this.extractJsonFromResponse(content);
-
+      const parsed = this.extractJsonFromResponse(text);
       if (!parsed || !parsed.condition || parsed.confidence === undefined) {
         return this.getDefaultDiagnosis(userMessage);
       }
-
       return this.buildDiagnosisResult(parsed);
     } catch (error) {
       console.error("Error parsing Bedrock response:", error);

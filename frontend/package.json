@@ -1,5 +1,5 @@
 {
-  "name": "@agrisense/frontend",
+  "name": "@harvest-ai/frontend",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -14,7 +14,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.20.1",
-    "@agrisense/shared": "*"
+    "@harvest-ai/shared": "*"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

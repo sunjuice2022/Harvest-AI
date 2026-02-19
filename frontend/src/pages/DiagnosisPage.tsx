@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { ChatBubble } from "../components/diagnosis/ChatBubble";
 import { ChatInput } from "../components/diagnosis/ChatInput";
 import { PhotoUpload } from "../components/diagnosis/PhotoUpload";
@@ -67,6 +68,7 @@ export const DiagnosisPage: React.FC = () => {
   return (
     <div className="diagnosis-page">
       <div className="diagnosis-header">
+        <Link to="/" className="diagnosis-header__back">← Home</Link>
         <h1>🌾 Crop Diagnosis AI</h1>
         <p>Upload a photo or describe your plant issue for instant diagnosis</p>
       </div>

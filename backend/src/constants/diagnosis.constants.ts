@@ -5,10 +5,10 @@
 export const DIAGNOSIS_CONSTANTS = {
   // Table names
   CHAT_SESSIONS_TABLE: process.env.CHAT_SESSIONS_TABLE || "ChatSessions",
-  MEDIA_BUCKET: process.env.MEDIA_BUCKET || "agrisense-media",
+  MEDIA_BUCKET: process.env.MEDIA_BUCKET || "harvest-ai-media",
 
   // Bedrock configuration
-  BEDROCK_MODEL_ID: "anthropic.claude-3-5-sonnet-20241022",
+  BEDROCK_MODEL_ID: "au.anthropic.claude-sonnet-4-6",
   IMAGE_ANALYSIS_TIMEOUT: 5000, // 5 seconds for instant diagnosis requirement
 
   // Session configuration

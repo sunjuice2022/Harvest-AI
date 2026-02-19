@@ -5,26 +5,16 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DiagnosisPage } from "./pages/DiagnosisPage";
+import { HomePage } from "./pages/HomePage";
+import { FarmRecommendationPage } from "./pages/FarmRecommendationPage";
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route path="/diagnosis" element={<DiagnosisPage />} />
-        <Route
-          path="/"
-          element={
-            <div style={{ padding: "40px", textAlign: "center" }}>
-              <h1>🌾 AgriSense AI</h1>
-              <p>Welcome to Crop Diagnosis AI</p>
-              <p>
-                <a href="/diagnosis" style={{ color: "#84cc16", fontSize: "18px" }}>
-                  Go to Diagnosis Chatbot →
-                </a>
-              </p>
-            </div>
-          }
-        />
+        <Route path="/farm-recommendation" element={<FarmRecommendationPage />} />
       </Routes>
     </BrowserRouter>
   );

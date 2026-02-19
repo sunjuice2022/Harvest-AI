@@ -1,7 +1,8 @@
 import express from "express";
 import type { Express, Request, Response } from "express";
 import cors from "cors";
-import type { ChatMessage } from "@agrisense/shared";
+import axios from "axios";
+import type { ChatMessage, DiagnosisResult, FarmRecommendationRequest } from "@harvest-ai/shared";
 import { mockDiagnoseCrop } from "../tests/mocks/bedrock.mock.js";
 import {
   mockGetSession,
@@ -9,11 +10,35 @@ mockCreateSession,
   mockUpdateSession,
   mockGetUserSessions,
 } from "../tests/mocks/dynamodb.mock.js";
-
 import {
   mockGeneratePresignedUrl,
   mockValidateFileType,
 } from "../tests/mocks/s3.mock.js";
+import { mockFarmRecommendation } from "../tests/mocks/farmRecommendation.mock";
+import { DiagnosisService } from "./services/diagnosis/diagnosis.service";
+
+const USE_REAL_BEDROCK = process.env.USE_REAL_BEDROCK === "true";
+const diagnosisService = USE_REAL_BEDROCK
+  ? new DiagnosisService({ region: process.env.AWS_REGION || "us-east-1" })
+  : null;
+
+async function performDiagnosis(message: string, imageUrl?: string): Promise<DiagnosisResult> {
+  if (USE_REAL_BEDROCK && diagnosisService) {
+    const imageBase64 = imageUrl ? await fetchImageAsBase64(imageUrl) : undefined;
+    return diagnosisService.diagnoseCrop(message, imageBase64);
+  }
+  return mockDiagnoseCrop(message, imageUrl);
+}
+
+async function fetchImageAsBase64(url: string): Promise<string | undefined> {
+  try {
+    const response = await axios.get<ArrayBuffer>(url, { responseType: "arraybuffer" });
+    return Buffer.from(response.data).toString("base64");
+  } catch {
+    console.warn("[Bedrock] Could not fetch image, proceeding without it:", url);
+    return undefined;
+  }
+}
 
 const app: Express = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
@@ -86,7 +111,7 @@ app.post("/api/diagnosis/chat", async (req: Request, res: Response) => {
       session = await mockCreateSession(sessionId, userId);
     }
 
-    const diagnosis = await mockDiagnoseCrop(message, imageUrl);
+    const diagnosis = await performDiagnosis(message, imageUrl);
     const userMessage = createUserMessage(message, imageUrl);
     const assistantMessage = createAssistantMessage(diagnosis);
 
@@ -161,24 +186,45 @@ app.post("/api/diagnosis/upload", async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/farm-recommendation
+app.post("/api/farm-recommendation", (req: Request, res: Response) => {
+  try {
+    const request = req.body as FarmRecommendationRequest;
+
+    if (!request.farmType || !request.climateZone || !request.season) {
+      return res.status(400).json({ error: "Missing required fields: farmType, climateZone, season" });
+    }
+
+    const result = mockFarmRecommendation(request);
+    return res.json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Health check
 app.get("/health", (_req: Request, res: Response) => {
   res.json({
     status: "ok",
     timestamp: new Date().toISOString(),
-    mode: "mock (local testing)",
+    mode: USE_REAL_BEDROCK ? "real-bedrock (Claude 3.5 Sonnet)" : "mock (local testing)",
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`\n✅ Mock Backend Server running on http://localhost:${PORT}`);
+  const mode = USE_REAL_BEDROCK
+    ? `Real Bedrock AI (Claude 3.5 Sonnet) — region: ${process.env.AWS_REGION || "us-east-1"}`
+    : "Mock (in-memory database + mock Bedrock)";
+  console.log(`\n✅ Backend Server running on http://localhost:${PORT}`);
   console.log(`📡 API Base: http://localhost:${PORT}/api`);
-  console.log(`🧪 Mode: Mock (using in-memory database + mock Bedrock)`);
+  console.log(`🧪 Mode: ${mode}`);
   console.log(`\n💡 Endpoints:`);
   console.log(`   POST   /api/diagnosis/chat          - Send message & get diagnosis`);
   console.log(`   GET    /api/diagnosis/sessions      - Load user sessions`);
   console.log(`   POST   /api/diagnosis/upload        - Get presigned URL for photo upload`);
+  console.log(`   POST   /api/farm-recommendation     - Get crop & livestock recommendations`);
   console.log(`   GET    /health                      - Health check`);
-  console.log(`\n🌐 Frontend: http://localhost:5173/diagnosis\n`);
+  console.log(`\n🌐 Frontend: http://localhost:5173 or http://localhost:5174\n`);
 });

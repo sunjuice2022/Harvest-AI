@@ -3,3 +3,4 @@
  */
 
 export * from "./diagnosis.types";
+export * from "./farmRecommendation.types";

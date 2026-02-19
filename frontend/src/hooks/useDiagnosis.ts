@@ -3,7 +3,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import type { ChatSession, ChatMessage, DiagnosisResult, DiagnosisResponse } from "@agrisense/shared";
+import type { ChatSession, ChatMessage, DiagnosisResult, DiagnosisResponse } from "@harvest-ai/shared";
 import { DIAGNOSIS_CONSTANTS } from "../constants/diagnosis.constants";
 
 // Simple UUID v4 generator for browser

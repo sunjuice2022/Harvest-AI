@@ -1,4 +1,4 @@
-import type { ChatSession, ChatMessage } from "@agrisense/shared";
+import type { ChatSession, ChatMessage } from "@harvest-ai/shared";
 
 // In-memory storage (replaces DynamoDB)
 const mockDatabase = new Map<string, ChatSession>();

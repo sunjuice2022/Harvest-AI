@@ -4,11 +4,12 @@
  */
 
 import { ChatSessionRepository } from "../../repositories/diagnosis/chatSession.repository";
-import type { ChatSession } from "@agrisense/shared";
+import type { ChatSession } from "@harvest-ai/shared";
 
 const sessionRepository = new ChatSessionRepository();
 
 interface APIGatewayProxyEvent {
+  headers?: Record<string, string>;
   pathParameters?: Record<string, string> | null;
   queryStringParameters?: Record<string, string> | null;
   requestContext?: {
@@ -28,8 +29,10 @@ interface APIGatewayProxyResult {
 
 export async function getSessions(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    // Extract user ID from Cognito authorizer
-    const userId = event.requestContext?.authorizer?.claims?.sub;
+    // Extract user ID from Cognito authorizer or x-user-id header (dev)
+    const userId =
+      event.requestContext?.authorizer?.claims?.sub ||
+      event.headers?.["x-user-id"];
     if (!userId) {
       return errorResponse(401, "Unauthorized");
     }

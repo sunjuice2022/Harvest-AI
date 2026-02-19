@@ -6,7 +6,7 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
-import type { PhotoUploadResponse } from "@agrisense/shared";
+import type { PhotoUploadResponse } from "@harvest-ai/shared";
 import { randomUUID } from "crypto";
 
 const s3Client = new S3Client({ region: process.env.AWS_REGION });
@@ -32,8 +32,10 @@ interface APIGatewayProxyResult {
 
 export async function uploadPhoto(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    // Extract user ID from Cognito authorizer
-    const userId = event.requestContext?.authorizer?.claims?.sub;
+    // Extract user ID from Cognito authorizer or x-user-id header (dev)
+    const userId =
+      event.requestContext?.authorizer?.claims?.sub ||
+      event.headers["x-user-id"];
     if (!userId) {
       return errorResponse(401, "Unauthorized");
     }

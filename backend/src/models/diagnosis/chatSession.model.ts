@@ -2,7 +2,7 @@
  * Diagnosis data models for storage and API contracts
  */
 
-import type { ChatSession, ChatMessage, DiagnosisResult } from "@agrisense/shared";
+import type { ChatSession, ChatMessage, DiagnosisResult } from "@harvest-ai/shared";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
 
 export interface ChatSessionItem {

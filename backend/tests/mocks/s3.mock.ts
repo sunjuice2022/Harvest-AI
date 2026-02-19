@@ -1,5 +1,5 @@
 // Mock S3 presigned URLs
-const MOCK_BUCKET = "agrisense-media-mock";
+const MOCK_BUCKET = "harvest-ai-media-mock";
 
 export async function mockGeneratePresignedUrl(
   fileName: string,

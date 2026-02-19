@@ -2,10 +2,10 @@
  * Shared types for Crop Diagnosis AI feature
  */
 export type DiagnosisSeverity = "info" | "warning" | "critical";
-export type DiagnoisConditionType = "disease" | "pest" | "nutrient_deficiency" | "abiotic_stress";
+export type DiagnosisConditionType = "disease" | "pest" | "nutrient_deficiency" | "abiotic_stress";
 export interface DiagnosisResult {
     condition: string;
-    conditionType: DiagnoisConditionType;
+    conditionType: DiagnosisConditionType;
     confidence: number;
     severity: DiagnosisSeverity;
     description: string;

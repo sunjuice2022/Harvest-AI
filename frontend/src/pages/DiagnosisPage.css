@@ -22,6 +22,20 @@
   backdrop-filter: blur(10px);
 }
 
+.diagnosis-header__back {
+  display: inline-block;
+  font-size: 13px;
+  color: rgba(163, 190, 140, 0.8);
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.15s ease;
+}
+
+.diagnosis-header__back:hover {
+  color: #84cc16;
+  text-decoration: none;
+}
+
 .diagnosis-header h1 {
   margin: 0 0 4px;
   font-size: 24px;

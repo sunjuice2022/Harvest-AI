@@ -11,7 +11,7 @@ export default defineConfig({
       "@components": path.resolve(__dirname, "./src/components"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@pages": path.resolve(__dirname, "./src/pages"),
-      "@agrisense/shared": path.resolve(__dirname, "../shared/src"),
+      "@harvest-ai/shared": path.resolve(__dirname, "../shared/src"),
     },
   },
   server: {

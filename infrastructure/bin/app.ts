@@ -9,18 +9,15 @@ import { DiagnosisStack } from "../lib/stacks/diagnosis-stack";
 const app = new cdk.App();
 
 // Define stacks for each domain
-new WeatherStack(app, "WeatherStack", {
-  env: {
+const env: cdk.Environment = {
+  ...(process.env.CDK_DEFAULT_ACCOUNT && {
     account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION || "us-east-1",
-  },
-});
+  }),
+  region: process.env.CDK_DEFAULT_REGION || "ap-southeast-2",
+};
 
-new DiagnosisStack(app, "DiagnosisStack", {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION || "us-east-1",
-  },
-});
+new WeatherStack(app, "WeatherStack", { env });
+
+new DiagnosisStack(app, "DiagnosisStack", { env });
 
 // TODO: Add News, Community, and Auth stacks

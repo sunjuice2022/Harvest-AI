@@ -1,4 +1,4 @@
-import type { ChatSession } from "@agrisense/shared";
+import type { ChatSession } from "@harvest-ai/shared";
 export declare function mockGetSession(userId: string, sessionId: string): Promise<ChatSession | null>;
 export declare function mockCreateSession(sessionId: string, userId: string): Promise<ChatSession>;
 export declare function mockUpdateSession(session: ChatSession): Promise<ChatSession>;

@@ -5,7 +5,7 @@
 
 import { ChatSessionRepository } from "../../repositories/diagnosis/chatSession.repository";
 import { DiagnosisService } from "../../services/diagnosis/diagnosis.service";
-import type { ChatSession, ChatMessage, DiagnosisRequest, DiagnosisResponse, DiagnosisResult } from "@agrisense/shared";
+import type { ChatSession, ChatMessage, DiagnosisRequest, DiagnosisResponse, DiagnosisResult } from "@harvest-ai/shared";
 import { randomUUID } from "crypto";
 
 const sessionRepository = new ChatSessionRepository();
@@ -32,8 +32,10 @@ interface APIGatewayProxyResult {
 
 export async function diagnosisChat(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   try {
-    // Extract user ID from Cognito authorizer
-    const userId = event.requestContext?.authorizer?.claims?.sub;
+    // Extract user ID from Cognito authorizer or x-user-id header (dev)
+    const userId =
+      event.requestContext?.authorizer?.claims?.sub ||
+      event.headers["x-user-id"];
     if (!userId) {
       return errorResponse(401, "Unauthorized");
     }

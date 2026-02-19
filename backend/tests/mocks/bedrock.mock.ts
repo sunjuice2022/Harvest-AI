@@ -1,4 +1,4 @@
-import type { DiagnosisResult } from "@agrisense/shared";
+import type { DiagnosisResult } from "@harvest-ai/shared";
 
 export async function mockDiagnoseCrop(
   message: string,
