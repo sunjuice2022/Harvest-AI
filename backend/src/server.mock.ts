@@ -2,7 +2,7 @@ import express from "express";
 import type { Express, Request, Response } from "express";
 import cors from "cors";
 import axios from "axios";
-import type { ChatMessage, DiagnosisResult, FarmRecommendationRequest } from "@harvest-ai/shared";
+import type { ChatMessage, DiagnosisResult, FarmRecommendationRequest, MarketInsightRequest } from "@harvest-ai/shared";
 import { mockDiagnoseCrop } from "../tests/mocks/bedrock.mock.js";
 import {
   mockGetSession,
@@ -15,6 +15,8 @@ import {
   mockValidateFileType,
 } from "../tests/mocks/s3.mock.js";
 import { mockFarmRecommendation } from "../tests/mocks/farmRecommendation.mock";
+import { mockGetMarketPrices, mockGetMarketInsight } from "../tests/mocks/marketPrice.mock";
+import { fetchWorldBankData, enrichCommodity, WB_COMMODITY_IDS } from "./services/market-price/worldBank.service";
 import { DiagnosisService } from "./services/diagnosis/diagnosis.service";
 
 const USE_REAL_BEDROCK = process.env.USE_REAL_BEDROCK === "true";
@@ -92,6 +94,23 @@ function generateFollowUpSuggestions(diagnosis: any): string[] {
     "How should I apply the treatment?",
     "Are there resistant varieties I can plant?",
   ];
+}
+
+// Helper: Enrich mock commodities with real World Bank data (5s timeout, graceful fallback)
+async function enrichWithWorldBank(commodities: ReturnType<typeof mockGetMarketPrices>["commodities"]) {
+  try {
+    const wbData = await Promise.race([
+      fetchWorldBankData(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("WB timeout")), 5000)),
+    ]);
+    return commodities.map((c) => {
+      const pts = wbData.get(c.id);
+      return pts ? enrichCommodity(c, pts) : c;
+    });
+  } catch (err) {
+    console.warn("[WorldBank] Falling back to mock data:", err instanceof Error ? err.message : err);
+    return commodities;
+  }
 }
 
 // POST /api/diagnosis/chat
@@ -203,6 +222,36 @@ app.post("/api/farm-recommendation", (req: Request, res: Response) => {
   }
 });
 
+// GET /api/market-prices
+app.get("/api/market-prices", async (_req: Request, res: Response) => {
+  try {
+    const { commodities } = mockGetMarketPrices();
+    const enriched = await enrichWithWorldBank(commodities);
+    return res.json({
+      commodities: enriched,
+      lastUpdated: new Date().toISOString(),
+      worldBankCommodities: WB_COMMODITY_IDS,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to load market prices" });
+  }
+});
+
+// POST /api/market-prices/insight
+app.post("/api/market-prices/insight", (req: Request, res: Response) => {
+  try {
+    const body = req.body as Partial<MarketInsightRequest>;
+    if (!body.commodityId || !body.commodityName || body.currentPrice === undefined) {
+      return res.status(400).json({ error: "commodityId, commodityName and currentPrice are required" });
+    }
+    return res.json(mockGetMarketInsight(body as MarketInsightRequest));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Failed to generate market insight" });
+  }
+});
+
 // Health check
 app.get("/health", (_req: Request, res: Response) => {
   res.json({
@@ -225,6 +274,8 @@ app.listen(PORT, () => {
   console.log(`   GET    /api/diagnosis/sessions      - Load user sessions`);
   console.log(`   POST   /api/diagnosis/upload        - Get presigned URL for photo upload`);
   console.log(`   POST   /api/farm-recommendation     - Get crop & livestock recommendations`);
+  console.log(`   GET    /api/market-prices           - Get all commodity prices`);
+  console.log(`   POST   /api/market-prices/insight   - Get AI insight for a commodity`);
   console.log(`   GET    /health                      - Health check`);
   console.log(`\n🌐 Frontend: http://localhost:5173 or http://localhost:5174\n`);
 });

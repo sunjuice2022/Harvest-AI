@@ -1,0 +1,48 @@
+.category-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.25rem 0;
+}
+
+.category-filter__pill {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(132, 204, 22, 0.2);
+  background: rgba(26, 46, 5, 0.5);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.category-filter__pill:hover {
+  border-color: rgba(132, 204, 22, 0.45);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(132, 204, 22, 0.08);
+}
+
+.category-filter__pill--active {
+  background: rgba(132, 204, 22, 0.18);
+  border-color: #84cc16;
+  color: #84cc16;
+  font-weight: 700;
+}
+
+.category-filter__count {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.category-filter__pill--active .category-filter__count {
+  background: rgba(132, 204, 22, 0.25);
+  color: #84cc16;
+}

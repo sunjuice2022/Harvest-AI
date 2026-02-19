@@ -11,10 +11,11 @@
     "lint": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
+    "@harvest-ai/shared": "*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.20.1",
-    "@harvest-ai/shared": "*"
+    "recharts": "^3.7.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

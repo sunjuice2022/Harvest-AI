@@ -1,0 +1,200 @@
+.detail-panel {
+  background: rgba(15, 28, 3, 0.7);
+  border: 1px solid rgba(132, 204, 22, 0.2);
+  border-radius: 12px;
+  padding: 1.2rem 1.2rem 1rem;
+  margin: 0.25rem 0 0.5rem;
+  animation: panel-slide-in 0.2s ease;
+}
+
+@keyframes panel-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Chart */
+.detail-panel__chart-wrap {
+  margin-bottom: 1rem;
+}
+
+/* Stats */
+.detail-panel__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+@media (max-width: 640px) {
+  .detail-panel__stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.detail-panel__stat {
+  background: rgba(26, 46, 5, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+}
+
+.detail-panel__stat-label {
+  display: block;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detail-panel__stat-value {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* AI Insight */
+.detail-panel__insight {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 0.9rem;
+}
+
+.detail-panel__insight-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.detail-panel__insight-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.detail-panel__insight-btn {
+  background: linear-gradient(135deg, #2D4A0E, #3d6315);
+  border: 1px solid #84cc16;
+  color: #84cc16;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.detail-panel__insight-btn:hover {
+  background: rgba(132, 204, 22, 0.18);
+  box-shadow: 0 0 12px rgba(132, 204, 22, 0.25);
+}
+
+.detail-panel__insight-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+}
+
+.detail-panel__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(132, 204, 22, 0.3);
+  border-top-color: #84cc16;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.detail-panel__insight-error {
+  color: #f87171;
+  font-size: 0.82rem;
+  padding: 0.4rem 0;
+}
+
+/* Result */
+.detail-panel__insight-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.detail-panel__rec-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detail-panel__rec-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+}
+
+.detail-panel__rec-badge--sell {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.detail-panel__rec-badge--hold {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.detail-panel__rec-badge--buy {
+  background: rgba(132, 204, 22, 0.15);
+  color: #84cc16;
+  border: 1px solid rgba(132, 204, 22, 0.35);
+}
+
+.detail-panel__confidence {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.detail-panel__reasoning {
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.detail-panel__targets {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.detail-panel__targets strong {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Tooltip */
+.detail-tooltip {
+  background: rgba(15, 28, 3, 0.95);
+  border: 1px solid rgba(132, 204, 22, 0.3);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+}
+
+.detail-tooltip__date {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.1rem;
+}
+
+.detail-tooltip__price {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #84cc16;
+}

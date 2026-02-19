@@ -56,7 +56,8 @@ const FEATURES: Feature[] = [
     name: "Market Price Intelligence",
     description:
       "Live market price tracking with AI-powered predictions to help farmers choose the best time to sell for maximum profit.",
-    status: "coming-soon",
+    status: "live",
+    href: "/market-prices",
   },
   {
     id: "voice",
@@ -124,7 +125,7 @@ export const HomePage: React.FC = () => (
       </p>
       <div className="home-hero__meta">
         <span className="home-hero__meta-dot" />
-        2 features live · 6 coming soon
+        3 features live · 5 coming soon
       </div>
     </header>
 

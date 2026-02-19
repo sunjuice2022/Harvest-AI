@@ -3,4 +3,5 @@
  */
 export * from "./diagnosis.types";
 export * from "./farmRecommendation.types";
+export * from "./marketPrice.types";
 //# sourceMappingURL=index.js.map
