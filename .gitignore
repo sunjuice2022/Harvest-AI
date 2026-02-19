@@ -8,3 +8,5 @@ dist/
 coverage/
 .vite/
 cdk.out/
+venv/
+backend/venv/
