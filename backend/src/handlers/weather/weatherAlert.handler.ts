@@ -5,6 +5,8 @@ import { WeatherService } from '../../services/weather/weather.service.js';
 import { WeatherAlertRepository } from '../../repositories/weather/weatherAlert.repository.js';
 import { WeatherAgent } from '../../agents/weather/weather.agent.js';
 import { WeatherAgentTools } from '../../agents/weather/weather.tools.js';
+import { WeatherNotificationService } from '../../services/weather/weatherNotification.service.js';
+import { WeatherBedrockService } from '../../services/weather/weatherBedrock.service.js';
 import { formatApiResponse, formatApiError, ValidationError } from '../../utils/apiResponse.util.js';
 import { requireEnv, optionalEnv } from '../../utils/env.util.js';
 import { GetAlertsResponse, AcknowledgeAlertResponse } from '@agrisense/shared';
@@ -17,7 +19,32 @@ const weatherService = new WeatherService({
   lowTempThreshold: Number(optionalEnv('WEATHER_LOW_TEMP', '5')),
   pollIntervalMinutes: Number(optionalEnv('WEATHER_POLL_INTERVAL', '30')),
 });
-const agentTools = new WeatherAgentTools(weatherService, alertRepository);
+
+function buildNotificationService(): WeatherNotificationService | undefined {
+  const topicArn = process.env['SNS_ALERT_TOPIC_ARN'];
+  if (!topicArn) return undefined;
+  const phoneNumber = process.env['ALERT_PHONE_NUMBER'];
+  return new WeatherNotificationService({
+    topicArn,
+    ...(phoneNumber ? { phoneNumber } : {}),
+  });
+}
+
+function buildBedrockService(): WeatherBedrockService | undefined {
+  const modelId = process.env['BEDROCK_MODEL_ID'];
+  if (!modelId) return undefined;
+  return new WeatherBedrockService({
+    modelId,
+    region: optionalEnv('AWS_REGION', 'us-east-1'),
+  });
+}
+
+const agentTools = new WeatherAgentTools(
+  weatherService,
+  alertRepository,
+  buildNotificationService(),
+  buildBedrockService()
+);
 const weatherAgent = new WeatherAgent(agentTools);
 
 /** EventBridge scheduled handler — runs every 30 minutes to poll weather and create alerts. */
@@ -64,7 +91,8 @@ export const acknowledgeAlertHandler: APIGatewayProxyHandler = async (event) => 
 };
 
 function extractUserId(authorizer: Record<string, unknown> | null | undefined): string {
-  const userId = authorizer?.['claims']?.['sub'];
+  const claims = authorizer?.['claims'] as Record<string, unknown> | undefined;
+  const userId = claims?.['sub'];
   if (typeof userId !== 'string' || !userId) {
     throw new ValidationError('Unauthorized: missing user identity');
   }

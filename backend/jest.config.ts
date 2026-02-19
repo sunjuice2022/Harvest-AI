@@ -8,6 +8,7 @@ const config: Config = {
   roots: ['<rootDir>/tests'],
   moduleNameMapper: {
     '^@agrisense/shared$': '<rootDir>/../shared/index.ts',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   coverageThreshold: {
     global: {

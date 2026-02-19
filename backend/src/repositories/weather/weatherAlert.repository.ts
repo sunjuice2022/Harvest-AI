@@ -8,7 +8,7 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { WeatherAlert } from '@agrisense/shared';
-import { CreateAlertInput } from '../../models/weather.types.js';
+import { CreateAlertInput } from '../../services/weather/weather.types.js';
 import { WEATHER_TABLE_NAME } from '../../constants/weather.constants.js';
 import { randomUUID } from 'crypto';
 

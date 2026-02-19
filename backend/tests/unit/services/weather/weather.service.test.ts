@@ -1,7 +1,7 @@
 /** Unit tests for WeatherService — forecast parsing and alert threshold evaluation. */
 
 import { WeatherService } from '../../../../src/services/weather/weather.service.js';
-import { OpenWeatherOneCallResponse } from '../../../../src/models/weather.types.js';
+import { OpenWeatherOneCallResponse } from '../../../../src/services/weather/weather.dto.js';
 
 const TEST_CONFIG = {
   apiBaseUrl: 'https://api.openweathermap.org/data/3.0',
@@ -28,7 +28,7 @@ function buildMockForecast(overrides: Partial<OpenWeatherOneCallResponse> = {}):
       temp: { max: 25, min: 15 },
       humidity: 60,
       wind_speed: 8,
-      rain: 0,
+      rain: 2,
       weather: [{ description: 'sunny', icon: '01d' }],
     })),
     ...overrides,
@@ -62,7 +62,15 @@ describe('WeatherService', () => {
     });
 
     it('should map rain to 0 when not present in daily data', () => {
-      const raw = buildMockForecast();
+      const raw = buildMockForecast({
+        daily: Array.from({ length: 7 }, (_, i) => ({
+          dt: 1700000000 + i * 86400,
+          temp: { max: 25, min: 15 },
+          humidity: 60,
+          wind_speed: 8,
+          weather: [{ description: 'sunny', icon: '01d' }],
+        })),
+      });
 
       const result = service.parseForecast(raw);
 
@@ -143,7 +151,16 @@ describe('WeatherService', () => {
     });
 
     it('should return a drought alert when 7+ consecutive dry days are detected', () => {
-      const raw = buildMockForecast();
+      const raw = buildMockForecast({
+        daily: Array.from({ length: 7 }, (_, i) => ({
+          dt: 1700000000 + i * 86400,
+          temp: { max: 25, min: 15 },
+          humidity: 60,
+          wind_speed: 8,
+          rain: 0,
+          weather: [{ description: 'sunny', icon: '01d' }],
+        })),
+      });
 
       const alerts = service.evaluateAlertConditions(raw, {
         highTempThreshold: 35,
