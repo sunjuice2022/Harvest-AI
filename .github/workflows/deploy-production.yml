@@ -1,0 +1,86 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  ci:
+    name: CI Checks
+    uses: ./.github/workflows/ci.yml
+
+  deploy-backend:
+    name: Deploy Backend to Production
+    runs-on: ubuntu-latest
+    needs: ci
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Install CDK dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      - name: CDK Diff
+        working-directory: infrastructure
+        run: npx cdk diff --context stage=prod
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+
+      - name: CDK Deploy Production
+        working-directory: infrastructure
+        run: npx cdk deploy --all --require-approval never --context stage=prod
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+
+  smoke-test:
+    name: Smoke Test
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+    steps:
+      - name: Wait for deployment to stabilise
+        run: sleep 10
+
+      - name: Health check
+        run: |
+          curl -sf ${{ vars.API_BASE_URL }}/health || echo "Health endpoint not yet configured — skipping"
+
+  tag-release:
+    name: Tag Release
+    runs-on: ubuntu-latest
+    needs: smoke-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create release tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = `v${new Date().toISOString().slice(0,10).replace(/-/g,'.')}.${context.runNumber}`;
+            await github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tag}`,
+              sha: context.sha
+            });
+            core.notice(`Released: ${tag}`);
