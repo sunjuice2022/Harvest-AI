@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from "react";
-import type { FarmRecommendationRequest, FarmType, ClimateZone, Season, WaterAvailability, SoilType, BudgetLevel } from "@harvest-ai/shared";
+import type { FarmRecommendationRequest, FarmType, ClimateZone, Season, WaterAvailability, SoilType, BudgetLevel } from "@agrisense/shared";
 import {
   FARM_TYPE_OPTIONS,
   CLIMATE_ZONE_OPTIONS,

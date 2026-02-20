@@ -2,11 +2,11 @@
  * ChatSession repository - handles DynamoDB operations
  */
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
-import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
-import { toChatSession, toChatSessionItem, type ChatSessionItem } from "../../models/diagnosis/chatSession.model";
-import type { ChatSession } from "@harvest-ai/shared";
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
+import { DIAGNOSIS_CONSTANTS } from '../../constants/diagnosis.constants';
+import { toChatSession, toChatSessionItem, type ChatSessionItem } from '../../models/diagnosis/chatSession.model';
+import type { ChatSession } from '@agrisense/shared';
 
 export class ChatSessionRepository {
   private docClient: DynamoDBDocumentClient;
@@ -19,46 +19,59 @@ export class ChatSessionRepository {
   }
 
   async getSession(userId: string, sessionId: string): Promise<ChatSession | null> {
-    const command = new GetCommand({
-      TableName: this.tableName,
-      Key: { PK: userId, SK: sessionId },
-    });
-
-    const result = await this.docClient.send(command);
-    return result.Item ? toChatSession(result.Item as ChatSessionItem) : null;
+    try {
+      const command = new GetCommand({
+        TableName: this.tableName,
+        Key: { PK: userId, SK: sessionId },
+      });
+      const result = await this.docClient.send(command);
+      return result.Item ? toChatSession(result.Item as ChatSessionItem) : null;
+    } catch (error) {
+      console.error('[ChatSessionRepository.getSession] error:', error);
+      throw error;
+    }
   }
 
   async createSession(session: ChatSession): Promise<void> {
-    const item = toChatSessionItem(session);
-    const command = new PutCommand({
-      TableName: this.tableName,
-      Item: item,
-    });
-
-    await this.docClient.send(command);
+    try {
+      const command = new PutCommand({
+        TableName: this.tableName,
+        Item: toChatSessionItem(session),
+      });
+      await this.docClient.send(command);
+    } catch (error) {
+      console.error('[ChatSessionRepository.createSession] error:', error);
+      throw error;
+    }
   }
 
   async updateSession(session: ChatSession): Promise<void> {
-    session.updatedAt = Date.now();
-    const item = toChatSessionItem(session);
-    const command = new PutCommand({
-      TableName: this.tableName,
-      Item: item,
-    });
-
-    await this.docClient.send(command);
+    try {
+      const command = new PutCommand({
+        TableName: this.tableName,
+        Item: toChatSessionItem(session),
+      });
+      await this.docClient.send(command);
+    } catch (error) {
+      console.error('[ChatSessionRepository.updateSession] error:', error);
+      throw error;
+    }
   }
 
-  async getUserSessions(userId: string, limit: number = 10): Promise<ChatSession[]> {
-    const command = new QueryCommand({
-      TableName: this.tableName,
-      KeyConditionExpression: "PK = :userId",
-      ExpressionAttributeValues: { ":userId": userId },
-      ScanIndexForward: false,
-      Limit: limit,
-    });
-
-    const result = await this.docClient.send(command);
-    return (result.Items || []).map((item) => toChatSession(item as ChatSessionItem));
+  async getUserSessions(userId: string, limit = 10): Promise<ChatSession[]> {
+    try {
+      const command = new QueryCommand({
+        TableName: this.tableName,
+        KeyConditionExpression: 'PK = :userId',
+        ExpressionAttributeValues: { ':userId': userId },
+        ScanIndexForward: false,
+        Limit: limit,
+      });
+      const result = await this.docClient.send(command);
+      return (result.Items || []).map((item) => toChatSession(item as ChatSessionItem));
+    } catch (error) {
+      console.error('[ChatSessionRepository.getUserSessions] error:', error);
+      throw error;
+    }
   }
 }

@@ -3,26 +3,15 @@
  */
 
 import React from "react";
-import {
-  AreaChart,
-  Area,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-} from "recharts";
-import type { Commodity } from "@harvest-ai/shared";
+import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import type { Commodity } from "@agrisense/shared";
+import { formatPrice } from "../../utils";
 import "./TrendChartCard.css";
 
 interface Props {
   commodity: Commodity;
   onClick: (c: Commodity) => void;
   isSelected: boolean;
-}
-
-function formatPrice(price: number, currency: string): string {
-  if (price >= 1000) return `${currency} ${(price / 1000).toFixed(1)}k`;
-  if (price < 1) return `${currency} ${price.toFixed(3)}`;
-  return `${currency} ${price.toFixed(2)}`;
 }
 
 const CustomTooltip: React.FC<{
@@ -32,22 +21,12 @@ const CustomTooltip: React.FC<{
   currency: string;
 }> = ({ active, payload, currency }) => {
   if (!active || !payload?.length) return null;
-  return (
-    <div className="trend-tooltip">
-      {formatPrice(payload[0].value, currency)}
-    </div>
-  );
+  return <div className="trend-tooltip">{formatPrice(payload[0].value, currency)}</div>;
 };
 
-export const TrendChartCard: React.FC<Props> = ({
-  commodity,
-  onClick,
-  isSelected,
-}) => {
+export const TrendChartCard: React.FC<Props> = ({ commodity, onClick, isSelected }) => {
   const isUp = commodity.priceChangePct >= 0;
-  const chartColor = isUp ? "#84CC16" : "#f87171";
-  const chartFill = isUp ? "rgba(132,204,22,0.18)" : "rgba(248,113,113,0.18)";
-
+  const chartColor = isUp ? "var(--color-leaf-green)" : "var(--color-alert-red)";
   const tickData = commodity.priceHistory.filter((_, i) => i % 9 === 0);
 
   return (
@@ -63,8 +42,7 @@ export const TrendChartCard: React.FC<Props> = ({
           <span className="trend-chart-card__unit">per {commodity.unit}</span>
         </div>
         <div className={`trend-chart-card__change ${isUp ? "up" : "down"}`}>
-          {isUp ? "▲" : "▼"}{" "}
-          {Math.abs(commodity.priceChangePct).toFixed(1)}%
+          {isUp ? "▲" : "▼"} {Math.abs(commodity.priceChangePct).toFixed(1)}%
         </div>
       </div>
 
@@ -89,9 +67,7 @@ export const TrendChartCard: React.FC<Props> = ({
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip
-              content={<CustomTooltip currency={commodity.currency} />}
-            />
+            <Tooltip content={<CustomTooltip currency={commodity.currency} />} />
             <Area
               type="monotone"
               dataKey="price"

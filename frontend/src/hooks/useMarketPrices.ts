@@ -3,7 +3,9 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import type { Commodity, CommodityCategory, MarketPricesResponse } from "@harvest-ai/shared";
+import type { Commodity, CommodityCategory, MarketPricesResponse } from "@agrisense/shared";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 interface ExtendedResponse extends MarketPricesResponse {
   worldBankCommodities?: readonly string[];
@@ -31,7 +33,7 @@ export function useMarketPrices(category: CommodityCategory | "all") {
     setIsLoading(true);
     setError(null);
 
-    fetch("/api/market-prices")
+    fetch(`${API_BASE_URL}/market-prices`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json() as Promise<ExtendedResponse>;

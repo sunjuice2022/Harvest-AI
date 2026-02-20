@@ -4,8 +4,8 @@
 
 import { useState, useCallback } from "react";
 import i18n from "../i18n";
-import { LANGUAGE_STORAGE_KEY, DEFAULT_LANGUAGE_CODE } from "@harvest-ai/shared";
-import type { VoiceLanguageCode } from "@harvest-ai/shared";
+import { LANGUAGE_STORAGE_KEY, DEFAULT_LANGUAGE_CODE } from "@agrisense/shared";
+import type { VoiceLanguageCode } from "@agrisense/shared";
 
 function readStoredLanguage(): VoiceLanguageCode {
   return (localStorage.getItem(LANGUAGE_STORAGE_KEY) as VoiceLanguageCode) ?? DEFAULT_LANGUAGE_CODE;

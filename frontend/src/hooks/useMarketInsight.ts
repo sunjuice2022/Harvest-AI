@@ -3,8 +3,10 @@
  */
 
 import { useState } from "react";
-import type { Commodity, MarketInsightResponse } from "@harvest-ai/shared";
+import type { Commodity, MarketInsightResponse } from "@agrisense/shared";
 import { getCurrentLanguage } from "./useLanguage";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 interface InsightState {
   insight: MarketInsightResponse | null;
@@ -22,7 +24,7 @@ export function useMarketInsight() {
   async function fetchInsight(commodity: Commodity): Promise<void> {
     setState({ insight: null, isLoading: true, error: null });
     try {
-      const res = await fetch("/api/market-prices/insight", {
+      const res = await fetch(`${API_BASE_URL}/market-prices/insight`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-language": getCurrentLanguage() },
         body: JSON.stringify({

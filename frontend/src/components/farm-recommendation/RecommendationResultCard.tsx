@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import type { CropRecommendation, LivestockRecommendation, MarketDemand } from "@harvest-ai/shared";
+import type { CropRecommendation, LivestockRecommendation, MarketDemand } from "@agrisense/shared";
 import "./RecommendationResultCard.css";
 
 type CardVariant = "crop" | "livestock";

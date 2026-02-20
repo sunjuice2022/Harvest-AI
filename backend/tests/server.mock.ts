@@ -10,30 +10,30 @@ import type {
   FarmRecommendationRequest,
   MarketInsightRequest,
   VoiceLanguageCode,
-} from "@harvest-ai/shared";
-import { DEFAULT_LANGUAGE_CODE } from "@harvest-ai/shared";
-import { mockDiagnoseCrop } from "../tests/mocks/bedrock.mock.js";
+} from "@agrisense/shared";
+import { DEFAULT_LANGUAGE_CODE } from "@agrisense/shared";
+import { mockDiagnoseCrop } from "./mocks/bedrock.mock.js";
 import {
   mockGetSession,
   mockCreateSession,
   mockUpdateSession,
   mockGetUserSessions,
-} from "../tests/mocks/dynamodb.mock.js";
+} from "./mocks/dynamodb.mock.js";
 import {
   mockGeneratePresignedUrl,
   mockValidateFileType,
-} from "../tests/mocks/s3.mock.js";
-import { mockFarmRecommendation } from "../tests/mocks/farmRecommendation.mock";
-import { mockGetMarketPrices, mockGetMarketInsight } from "../tests/mocks/marketPrice.mock";
-import { mockTranscribeAudio, mockVoiceChat } from "../tests/mocks/voice.mock";
-import { VoiceChatService } from "./services/voice-chat/voiceChat.service";
-import type { HistoryItem } from "./services/voice-chat/voiceChat.service";
-import { fetchWorldBankData, enrichCommodity, WB_COMMODITY_IDS } from "./services/market-price/worldBank.service";
-import { DiagnosisService } from "./services/diagnosis/diagnosis.service";
-import { FarmRecommendationService } from "./services/farm-recommendation/farmRecommendation.service";
-import { VoiceService } from "./services/voice/voice.service";
-import { PollyService, type PollyVoiceInfo } from "./services/voice/polly.service";
-import { VOICE_CONSTANTS } from "./constants/voice.constants";
+} from "./mocks/s3.mock.js";
+import { mockFarmRecommendation } from "./mocks/farmRecommendation.mock";
+import { mockGetMarketPrices, mockGetMarketInsight } from "./mocks/marketPrice.mock";
+import { mockTranscribeAudio, mockVoiceChat } from "./mocks/voice.mock";
+import { VoiceChatService } from "../src/services/voice-chat/voiceChat.service";
+import type { HistoryItem } from "../src/services/voice-chat/voiceChat.service";
+import { fetchWorldBankData, enrichCommodity, WB_COMMODITY_IDS } from "../src/services/market-price/worldBank.service";
+import { DiagnosisService } from "../src/services/diagnosis/diagnosis.service";
+import { FarmRecommendationService } from "../src/services/farm-recommendation/farmRecommendation.service";
+import { VoiceService } from "../src/services/voice/voice.service";
+import { PollyService, type PollyVoiceInfo } from "../src/services/voice/polly.service";
+import { VOICE_CONSTANTS } from "../src/constants/voice.constants";
 
 const USE_REAL_BEDROCK = process.env.USE_REAL_BEDROCK === "true";
 const awsRegion = process.env.AWS_REGION || "ap-southeast-2";

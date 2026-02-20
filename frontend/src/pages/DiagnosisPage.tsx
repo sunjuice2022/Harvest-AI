@@ -19,7 +19,6 @@ export const DiagnosisPage: React.FC = () => {
   const initializedRef = useRef(false);
 
   useEffect(() => {
-    // Initialize session on mount (only once)
     if (!initializedRef.current && !state.session) {
       initializedRef.current = true;
       actions.initializeSession();
@@ -27,30 +26,21 @@ export const DiagnosisPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Auto-scroll to bottom when new messages arrive
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [state.session?.messages]);
 
   const handlePhotoSelected = async (file: File) => {
-    console.log("📸 Photo selected:", file.name, file.size, file.type);
     setShowPhotoUpload(true);
-    console.log("🔄 Calling uploadPhoto...");
     const imageUrl = await actions.uploadPhoto(file);
-    console.log("✅ Upload complete, imageUrl:", imageUrl ? "✓ (length: " + imageUrl.length + ")" : "✗ empty");
     if (imageUrl) {
       setSelectedImageUrl(imageUrl);
-      console.log("✅ Image URL set for next message");
-    } else {
-      console.log("❌ Upload failed, no imageUrl returned");
     }
   };
 
   const handleSendMessage = async (message: string) => {
     if (state.isLoading) return;
-
     const imageUrl = selectedImageUrl || undefined;
     const diagnosis = await actions.sendMessage(message, imageUrl);
-
     if (diagnosis) {
       setSelectedImageUrl("");
     }
@@ -76,9 +66,7 @@ export const DiagnosisPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           <span>{state.error}</span>
-          <button onClick={actions.clearError} className="close-error">
-            ✕
-          </button>
+          <button onClick={actions.clearError} className="close-error">✕</button>
         </div>
       )}
 
@@ -95,11 +83,7 @@ export const DiagnosisPage: React.FC = () => {
         ) : (
           <div className="messages-list">
             {state.session.messages.map((message) => (
-              <ChatBubble
-                key={message.id}
-                message={message}
-                isUser={message.role === "user"}
-              />
+              <ChatBubble key={message.id} message={message} isUser={message.role === "user"} />
             ))}
             {selectedImageUrl && (
               <div className="photo-preview-in-chat">
@@ -121,13 +105,7 @@ export const DiagnosisPage: React.FC = () => {
               isLoading={state.isLoading}
               uploadProgress={state.uploadProgress}
             />
-            <button
-              className="close-modal"
-              onClick={() => {
-                setShowPhotoUpload(false);
-              }}
-              type="button"
-            >
+            <button className="close-modal" onClick={() => setShowPhotoUpload(false)} type="button">
               Done
             </button>
           </div>
@@ -140,10 +118,7 @@ export const DiagnosisPage: React.FC = () => {
             <span>✅ Photo selected</span>
             <button
               className="remove-photo"
-              onClick={() => {
-                setSelectedImageUrl("");
-                console.log("❌ Photo removed");
-              }}
+              onClick={() => setSelectedImageUrl("")}
               type="button"
               title="Remove photo"
             >

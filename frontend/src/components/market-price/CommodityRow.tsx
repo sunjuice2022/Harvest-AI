@@ -3,13 +3,9 @@
  */
 
 import React from "react";
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
-import type { Commodity } from "@harvest-ai/shared";
+import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
+import type { Commodity } from "@agrisense/shared";
+import { formatPrice } from "../../utils";
 import "./CommodityRow.css";
 
 interface Props {
@@ -18,20 +14,10 @@ interface Props {
   onToggle: (id: string) => void;
 }
 
-function formatPrice(price: number, currency: string): string {
-  if (price >= 1000) return `${currency} ${(price / 1000).toFixed(1)}k`;
-  if (price < 1) return `${currency} ${price.toFixed(3)}`;
-  return `${currency} ${price.toFixed(2)}`;
-}
-
-export const CommodityRow: React.FC<Props> = ({
-  commodity,
-  isSelected,
-  onToggle,
-}) => {
+export const CommodityRow: React.FC<Props> = ({ commodity, isSelected, onToggle }) => {
   const isUp = commodity.priceChangePct >= 0;
   const sparkData = commodity.priceHistory.slice(-7);
-  const lineColor = isUp ? "#84cc16" : "#f87171";
+  const lineColor = isUp ? "var(--color-leaf-green)" : "var(--color-alert-red)";
 
   return (
     <div
@@ -82,9 +68,7 @@ export const CommodityRow: React.FC<Props> = ({
         </span>
       </div>
 
-      <span className={`commodity-row__toggle ${isSelected ? "open" : ""}`}>
-        ▾
-      </span>
+      <span className={`commodity-row__toggle ${isSelected ? "open" : ""}`}>▾</span>
     </div>
   );
 };

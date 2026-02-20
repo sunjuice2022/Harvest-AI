@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { RecommendationForm } from "../components/farm-recommendation/RecommendationForm";
 import { RecommendationResultCard } from "../components/farm-recommendation/RecommendationResultCard";
 import { useFarmRecommendation } from "../hooks/useFarmRecommendation";
-import type { FarmRecommendationResponse } from "@harvest-ai/shared";
+import type { FarmRecommendationResponse } from "@agrisense/shared";
 import "./FarmRecommendationPage.css";
 
 function MarketInsightBanner({ insight }: { insight: string }): React.ReactElement {

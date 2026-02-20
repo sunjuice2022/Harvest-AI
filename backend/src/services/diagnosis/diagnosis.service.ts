@@ -6,7 +6,7 @@ import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-r
 import type { ContentBlock } from "@aws-sdk/client-bedrock-runtime";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
 import { LANGUAGE_NAMES } from "../../constants/voice.constants";
-import type { DiagnosisResult, ChatMessage, VoiceLanguageCode } from "@harvest-ai/shared";
+import type { DiagnosisResult, ChatMessage, VoiceLanguageCode } from "@agrisense/shared";
 
 const SYSTEM_PROMPT_TEMPLATE = `You are an expert agricultural diagnostic AI assistant. Your role is to analyze crop images and text descriptions to identify:
 1. Plant diseases and infections

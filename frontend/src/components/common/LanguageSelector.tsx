@@ -3,8 +3,8 @@
  */
 
 import React from "react";
-import { SUPPORTED_LANGUAGES } from "@harvest-ai/shared";
-import type { VoiceLanguageCode } from "@harvest-ai/shared";
+import { SUPPORTED_LANGUAGES } from "@agrisense/shared";
+import type { VoiceLanguageCode } from "@agrisense/shared";
 import "./LanguageSelector.css";
 
 interface LanguageSelectorProps {

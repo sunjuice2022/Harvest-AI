@@ -3,6 +3,7 @@
  */
 
 import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
+import { LANGUAGE_NAMES } from "../../constants/voice.constants";
 
 interface ServiceConfig { region?: string; }
 export interface HistoryItem { role: "user" | "assistant"; content: string; }
@@ -14,16 +15,6 @@ Answer questions about crops, livestock, weather, pests, diseases, soil, irrigat
 Be warm, practical, and concise. Keep responses to 2-3 sentences unless more detail is needed.
 Never refer to yourself as AgriSense or any other name — you are always Juna.`;
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  "en-AU": "Australian English",
-  "zh-CN": "Simplified Chinese (Mandarin)",
-  "zh-HK": "Traditional Chinese (Cantonese)",
-  "vi-VN": "Vietnamese",
-  "hi-IN": "Hindi",
-  "it-IT": "Italian",
-  "ar-SA": "Arabic",
-};
-
 export class VoiceChatService {
   private client: BedrockRuntimeClient;
 
@@ -34,7 +25,7 @@ export class VoiceChatService {
   }
 
   async chat(message: string, history: HistoryItem[] = [], language = "en-AU"): Promise<string> {
-    const langName = LANGUAGE_NAMES[language] ?? "English";
+    const langName = (LANGUAGE_NAMES as Record<string, string>)[language] ?? "English";
     const command = new ConverseCommand({
       modelId: MODEL_ID,
       system: [{ text: `${SYSTEM_PROMPT}\n\nRespond in ${langName}.` }],
