@@ -1,0 +1,1 @@
+{"version":3,"file":"s3.mock.d.ts","sourceRoot":"","sources":["../../../tests/mocks/s3.mock.ts"],"names":[],"mappings":"AAGA,wBAAsB,wBAAwB,CAC5C,QAAQ,EAAE,MAAM,EAChB,QAAQ,EAAE,MAAM,GACf,OAAO,CAAC,MAAM,CAAC,CAQjB;AAED,wBAAsB,oBAAoB,CAAC,QAAQ,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,CAG7E;AAGD,wBAAsB,iBAAiB,CAAC,YAAY,EAAE,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,CAI9E"}

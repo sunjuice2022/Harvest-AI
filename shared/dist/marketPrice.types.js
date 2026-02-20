@@ -1,5 +1,6 @@
+"use strict";
 /**
  * Shared types for Market Price Intelligence feature
  */
-export {};
+Object.defineProperty(exports, "__esModule", { value: true });
 //# sourceMappingURL=marketPrice.types.js.map

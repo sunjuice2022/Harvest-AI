@@ -59,9 +59,10 @@ function LivestockDetails({ rec }: { rec: LivestockRecommendation }): React.Reac
 export function RecommendationResultCard(props: RecommendationResultCardProps): React.ReactElement {
   const { variant, rank } = props;
   const rec = props.recommendation;
-  const name = variant === "crop" ? rec.cropName : (rec as LivestockRecommendation).animalName;
-  const emoji = variant === "crop" ? rec.cropEmoji : (rec as LivestockRecommendation).animalEmoji;
-  const demand = DEMAND_LABELS[rec.marketDemand];
+  const name = variant === "crop" ? (rec as CropRecommendation).cropName : (rec as LivestockRecommendation).animalName;
+  const emoji = variant === "crop" ? (rec as CropRecommendation).cropEmoji : (rec as LivestockRecommendation).animalEmoji;
+  const demandKey = rec.marketDemand?.toLowerCase() as MarketDemand;
+  const demand = DEMAND_LABELS[demandKey] ?? DEMAND_LABELS["medium"];
 
   return (
     <div className={`result-card result-card--${variant}`}>

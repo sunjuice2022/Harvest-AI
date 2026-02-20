@@ -5,6 +5,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { ChatSession, ChatMessage, DiagnosisResult, DiagnosisResponse } from "@harvest-ai/shared";
 import { DIAGNOSIS_CONSTANTS } from "../constants/diagnosis.constants";
+import { getCurrentLanguage } from "./useLanguage";
 
 // Simple UUID v4 generator for browser
 function generateUUID(): string {
@@ -44,6 +45,7 @@ async function sendDiagnosisRequest(
     headers: {
       "Content-Type": "application/json",
       "x-user-id": userId,
+      "x-language": getCurrentLanguage(),
     },
     body: JSON.stringify({ sessionId, message, imageUrl }),
   });
@@ -93,6 +95,7 @@ async function getPresignedUrl(fileName: string, fileType: string, userId: strin
     headers: {
       "Content-Type": "application/json",
       "x-user-id": userId,
+      "x-language": getCurrentLanguage(),
     },
     body: JSON.stringify({ fileName, fileType }),
   });
@@ -259,6 +262,7 @@ export function useDiagnosis(): [UseDiagnosisState, UseDiagnosisActions] {
         const response = await fetch(`${API_BASE_URL}/diagnosis/sessions`, {
           headers: {
             "x-user-id": userIdRef.current,
+            "x-language": getCurrentLanguage(),
           },
         });
 

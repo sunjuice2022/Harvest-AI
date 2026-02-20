@@ -65,7 +65,8 @@ const FEATURES: Feature[] = [
     name: "Multilingual Voice Assistant",
     description:
       "Voice interaction system supporting regional languages, enabling low-literacy farmers to access information and services easily through voice.",
-    status: "coming-soon",
+    status: "live",
+    href: "/voice",
   },
   {
     id: "community",
@@ -115,6 +116,9 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
 
 export const HomePage: React.FC = () => (
   <div className="home-page">
+    <Link to="/settings" className="home-settings-link" aria-label="Settings">
+      ⚙️
+    </Link>
     <header className="home-hero">
       <div className="home-hero__logo">🌾</div>
       <h1 className="home-hero__title">
@@ -125,7 +129,7 @@ export const HomePage: React.FC = () => (
       </p>
       <div className="home-hero__meta">
         <span className="home-hero__meta-dot" />
-        3 features live · 5 coming soon
+        4 features live · 4 coming soon
       </div>
     </header>
 

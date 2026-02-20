@@ -1,0 +1,1 @@
+{"version":3,"file":"marketPrice.mock.d.ts","sourceRoot":"","sources":["../../../tests/mocks/marketPrice.mock.ts"],"names":[],"mappings":"AAAA;;GAEG;AAEH,OAAO,EAEL,oBAAoB,EACpB,qBAAqB,EACrB,oBAAoB,EACrB,MAAM,oBAAoB,CAAC;AA+E5B,wBAAgB,mBAAmB,IAAI,oBAAoB,CAK1D;AAED,wBAAgB,oBAAoB,CAClC,GAAG,EAAE,oBAAoB,GACxB,qBAAqB,CA6BvB"}

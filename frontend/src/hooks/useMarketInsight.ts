@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import type { Commodity, MarketInsightResponse } from "@harvest-ai/shared";
+import { getCurrentLanguage } from "./useLanguage";
 
 interface InsightState {
   insight: MarketInsightResponse | null;
@@ -23,7 +24,7 @@ export function useMarketInsight() {
     try {
       const res = await fetch("/api/market-prices/insight", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-language": getCurrentLanguage() },
         body: JSON.stringify({
           commodityId: commodity.id,
           commodityName: commodity.name,

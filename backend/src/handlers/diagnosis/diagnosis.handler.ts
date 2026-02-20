@@ -77,7 +77,7 @@ export async function diagnosisChat(event: APIGatewayProxyEvent): Promise<APIGat
       id: randomUUID(),
       role: "user",
       content: request.message,
-      imageUrl: request.imageUrl,
+      ...(request.imageUrl !== undefined ? { imageUrl: request.imageUrl } : {}),
       timestamp: Date.now(),
     };
 
@@ -149,7 +149,7 @@ function generateFollowUpSuggestions(diagnosis: DiagnosisResult): string[] {
   return suggestions;
 }
 
-async function convertImageUrlToBase64(imageUrl: string): Promise<string> {
+async function convertImageUrlToBase64(_imageUrl: string): Promise<string> {
   // This would fetch the image from S3 or external URL and convert to base64
   // For now, return empty string - implement based on your image storage
   return "";

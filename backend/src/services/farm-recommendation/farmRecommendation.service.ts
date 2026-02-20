@@ -4,11 +4,13 @@
 
 import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
 import { FARM_RECOMMENDATION_CONSTANTS } from "../../constants/farmRecommendation.constants";
+import { LANGUAGE_NAMES } from "../../constants/voice.constants";
 import type {
   FarmRecommendationRequest,
   FarmRecommendationResponse,
   CropRecommendation,
   LivestockRecommendation,
+  VoiceLanguageCode,
 } from "@harvest-ai/shared";
 
 const SYSTEM_PROMPT = `You are an expert agricultural planning advisor helping farmers in all regions plan profitable, sustainable farms.
@@ -22,7 +24,7 @@ For EACH livestock recommendation provide:
 - animalName, animalEmoji, suitabilityScore (0-100), primaryOutput (e.g. "eggs", "beef", "milk", "pork", "wool"), productionTimeline (e.g. "Eggs from week 18, year-round"), marketDemand ("low"|"medium"|"high"), reasons (array of exactly 3 short strings)
 
 Include poultry (layer hens, broilers, ducks), cattle (beef, dairy), pigs, goats, sheep, and aquaculture where appropriate.
-Factor in recent global supply shortages — eggs and beef have faced critical shortages due to disease outbreaks and poor planning. Reflect this accurately in marketDemand.
+Base marketDemand on actual current global and regional supply/demand conditions for each specific crop or animal.
 
 Rules:
 - farmType "crops" → empty livestockRecommendations array
@@ -45,14 +47,16 @@ export class FarmRecommendationService {
   private readonly modelId: string;
 
   constructor(config: ServiceConfig = {}) {
-    this.client = new BedrockRuntimeClient({ region: config.region ?? process.env.AWS_REGION });
+    this.client = new BedrockRuntimeClient({ region: config.region ?? process.env.AWS_REGION ?? "ap-southeast-2" });
     this.modelId = FARM_RECOMMENDATION_CONSTANTS.BEDROCK_MODEL_ID;
   }
 
-  async recommendFarm(request: FarmRecommendationRequest): Promise<FarmRecommendationResponse> {
+  async recommendFarm(request: FarmRecommendationRequest, language = "en-AU"): Promise<FarmRecommendationResponse> {
+    const languageName = LANGUAGE_NAMES[language as VoiceLanguageCode] ?? "English";
+    const systemPrompt = `${SYSTEM_PROMPT}\n\nRespond in ${languageName}. All text fields (cropName, animalName, reasons, marketInsight) must be in ${languageName}. Keep JSON keys in English.`;
     const command = new ConverseCommand({
       modelId: this.modelId,
-      system: [{ text: SYSTEM_PROMPT }],
+      system: [{ text: systemPrompt }],
       messages: [{ role: "user", content: [{ text: this.buildUserMessage(request) }] }],
       inferenceConfig: { maxTokens: FARM_RECOMMENDATION_CONSTANTS.MAX_TOKENS },
     });

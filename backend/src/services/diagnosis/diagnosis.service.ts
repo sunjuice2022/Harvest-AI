@@ -5,7 +5,8 @@
 import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
 import type { ContentBlock } from "@aws-sdk/client-bedrock-runtime";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
-import type { DiagnosisResult, ChatMessage } from "@harvest-ai/shared";
+import { LANGUAGE_NAMES } from "../../constants/voice.constants";
+import type { DiagnosisResult, ChatMessage, VoiceLanguageCode } from "@harvest-ai/shared";
 
 const SYSTEM_PROMPT_TEMPLATE = `You are an expert agricultural diagnostic AI assistant. Your role is to analyze crop images and text descriptions to identify:
 1. Plant diseases and infections
@@ -50,14 +51,16 @@ export class DiagnosisService {
   private modelId: string;
 
   constructor(config: DiagnosisServiceConfig = {}) {
-    this.bedrockClient = new BedrockRuntimeClient({ region: config.region || process.env.AWS_REGION });
+    this.bedrockClient = new BedrockRuntimeClient({ region: config.region ?? process.env.AWS_REGION ?? "ap-southeast-2" });
     this.modelId = DIAGNOSIS_CONSTANTS.BEDROCK_MODEL_ID;
   }
 
-  async diagnoseCrop(message: string, imageBase64?: string, _conversationHistory?: ChatMessage[]): Promise<DiagnosisResult> {
+  async diagnoseCrop(message: string, imageBase64?: string, _conversationHistory?: ChatMessage[], language = "en-AU"): Promise<DiagnosisResult> {
+    const languageName = LANGUAGE_NAMES[language as VoiceLanguageCode] ?? "English";
+    const systemPrompt = `${SYSTEM_PROMPT_TEMPLATE}\n\nRespond in ${languageName}. All text fields (description, treatment, organicAlternatives, preventionTips) must be in ${languageName}. Keep JSON keys in English.`;
     const command = new ConverseCommand({
       modelId: this.modelId,
-      system: [{ text: SYSTEM_PROMPT_TEMPLATE }],
+      system: [{ text: systemPrompt }],
       messages: [{ role: "user", content: this.buildConverseContent(message, imageBase64) }],
       inferenceConfig: { maxTokens: 1024 },
     });
@@ -108,7 +111,7 @@ export class DiagnosisService {
 
     return {
       condition: String(parsed.condition),
-      conditionType: (parsed.conditionType as string) || "disease",
+      conditionType: (["disease", "pest", "nutrient_deficiency", "abiotic_stress"].includes(parsed.conditionType as string) ? parsed.conditionType : "disease") as DiagnosisResult["conditionType"],
       confidence,
       severity: (parsed.severity as "info" | "warning" | "critical") || this.severityFromConfidence(confidence),
       description: String(parsed.description) || "Diagnosis complete",

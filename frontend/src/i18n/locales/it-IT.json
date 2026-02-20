@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Home",
+    "diagnosis": "Diagnosi Colture",
+    "farmPlanning": "Pianificazione Agricola",
+    "marketPrices": "Prezzi di Mercato",
+    "settings": "Impostazioni",
+    "back": "← Indietro"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "subtitle": "Personalizza la tua esperienza AgriSense AI",
+    "language": {
+      "title": "Lingua",
+      "description": "Seleziona la lingua per le risposte AI e l'interfaccia dell'app.",
+      "label": "Lingua Preferita",
+      "saved": "Lingua salvata"
+    },
+    "voice": {
+      "title": "Inserimento Vocale",
+      "description": "Tocca l'icona del microfono nella chat Diagnosi Colture per fare una domanda vocalmente. Supportato in tutte e 7 le lingue.",
+      "notSupported": "L'inserimento vocale non è disponibile per la lingua selezionata.",
+      "permissionDenied": "Accesso al microfono negato. Consenti l'accesso nelle impostazioni del browser.",
+      "recording": "In ascolto…",
+      "transcribing": "Trascrizione in corso…"
+    },
+    "aboriginal": {
+      "notice": "L'inserimento vocale non supporta ancora le lingue aborigene australiane. L'interazione testuale è disponibile in inglese."
+    }
+  },
+  "diagnosis": {
+    "title": "Diagnosi Colture",
+    "subtitle": "Rilevamento di malattie e parassiti delle colture con AI",
+    "placeholder": "Descrivi il problema della tua coltura o carica una foto…",
+    "send": "Invia",
+    "startMic": "Avvia inserimento vocale",
+    "stopMic": "Ferma registrazione",
+    "uploadPhoto": "Carica foto",
+    "loading": "Analisi della coltura in corso…",
+    "newSession": "Nuova Sessione",
+    "confidence": "Confidenza",
+    "severity": "Gravità",
+    "treatment": "Trattamento",
+    "organicAlternatives": "Alternative Biologiche",
+    "preventionTips": "Consigli di Prevenzione"
+  },
+  "farmPlanning": {
+    "title": "Consulente per la Pianificazione Agricola",
+    "subtitle": "L'AI consiglia le colture e il bestiame più redditizi in base alle tue condizioni.",
+    "submit": "Ottieni Raccomandazioni",
+    "loading": "L'AI sta analizzando le tue condizioni…",
+    "cropRecommendations": "Raccomandazioni Colture",
+    "livestockRecommendations": "Raccomandazioni Bestiame",
+    "suitability": "Idoneità",
+    "demand": {
+      "high": "↑ Alta Domanda",
+      "medium": "→ Domanda Media",
+      "low": "↓ Bassa Domanda"
+    }
+  },
+  "marketPrices": {
+    "title": "Prezzi di Mercato",
+    "subtitle": "Prezzi delle materie prime in tempo reale con analisi AI",
+    "loading": "Caricamento prezzi…",
+    "getInsight": "Ottieni Analisi AI"
+  },
+  "common": {
+    "error": "Qualcosa è andato storto. Riprova.",
+    "retry": "Riprova",
+    "dismiss": "Chiudi",
+    "loading": "Caricamento…",
+    "backToHome": "← Home"
+  }
+}

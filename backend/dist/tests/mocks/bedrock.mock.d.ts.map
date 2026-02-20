@@ -1,0 +1,1 @@
+{"version":3,"file":"bedrock.mock.d.ts","sourceRoot":"","sources":["../../../tests/mocks/bedrock.mock.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,oBAAoB,CAAC;AAE1D,wBAAsB,gBAAgB,CACpC,OAAO,EAAE,MAAM,EACf,WAAW,CAAC,EAAE,MAAM,GACnB,OAAO,CAAC,eAAe,CAAC,CAqG1B"}

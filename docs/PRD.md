@@ -136,6 +136,60 @@ Farmers face significant challenges:
 
 ---
 
+### 4.5 Multilingual Voice Assistant
+
+**Description:** A global language selector and voice input system that allows Australian farmers from diverse cultural backgrounds to use AgriSense AI in their preferred language. All AI responses are generated in the selected language. Voice input is captured via the browser microphone and transcribed using AWS Transcribe.
+
+**Supported Languages (Australia-focused):**
+
+| Code | Language | Community |
+|------|----------|-----------|
+| `en-AU` | English (Australian) | Default |
+| `zh-CN` | Mandarin Chinese | Largest non-English speaking group in Australia |
+| `zh-HK` | Cantonese | Chinese-Australian farming communities |
+| `vi-VN` | Vietnamese | Vietnamese-Australian horticulture sector |
+| `hi-IN` | Hindi | Indian-Australian farming communities |
+| `it-IT` | Italian | Traditional Italian market gardeners |
+| `ar-SA` | Arabic | Growing Arab-Australian farming communities |
+
+**Requirements:**
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| V-01 | Global language selector available in Settings/Profile, with all 7 supported languages | P2 |
+| V-02 | Selected language persists across sessions (stored in `preferences.language` in DynamoDB) | P2 |
+| V-03 | All Claude AI responses generated in the user's selected language (system prompt instructs language) | P2 |
+| V-04 | Microphone button in Crop Diagnosis chat input bar — tapping begins audio capture | P2 |
+| V-05 | Recorded audio sent to backend → Lambda calls AWS Transcribe → transcribed text returned in selected language | P2 |
+| V-06 | Transcribed text auto-fills the chat input field; user can review and edit before sending | P2 |
+| V-07 | Voice input supported in all 7 languages via AWS Transcribe language codes | P2 |
+| V-08 | Language change takes effect immediately on next AI interaction — no page reload required | P2 |
+| V-09 | UI labels, placeholders, and static text translated via i18n (react-i18next) for all 7 languages | P2 |
+| V-10 | Microphone permission denied state handled gracefully with clear error message | P2 |
+
+**Known Limitation — Aboriginal & Torres Strait Islander Languages:**
+AWS Transcribe does not support any Australian Aboriginal or Indigenous languages (Yolŋu Matha, Pitjantjatjara, Warlpiri, Arrernte, Kriol, etc.) as of 2025, and no production-ready commercial STT API currently does. For Aboriginal community users:
+- The language selector (V-01) and AI response translation (V-03) will be offered for the 7 supported languages above.
+- Voice input (V-04 to V-07) will be unavailable for unsupported languages — the microphone button is hidden and replaced with a text-only notice.
+- Future path: Explore partnership with [AIATSIS](https://aiatsis.gov.au/) or community-led transcription projects to build custom ASR models. This is tracked as a separate future initiative.
+
+**Voice Input Flow:**
+```
+User taps 🎙️ → Browser MediaRecorder captures audio → Audio sent to POST /api/voice/transcribe
+→ Lambda invokes AWS Transcribe (language: user.preferences.language)
+→ Transcribed text returned → Auto-filled in chat input → User reviews → Sends to AI
+```
+
+**Language & AI Response Flow:**
+```
+User selects language in Settings → Stored in DynamoDB preferences.language
+→ All subsequent API calls include Accept-Language header
+→ Backend appends "Respond in [language]" to Claude system prompt
+→ AI responds in farmer's language
+```
+
+---
+
 ## 5. Agentic AI Architecture
 
 ### 5.1 Agent Orchestration
@@ -228,6 +282,7 @@ Each agent has:
 | **Amazon Cognito** | User authentication and authorization |
 | **AWS Amplify** | Frontend hosting and CI/CD |
 | **AWS WAF** | Web application firewall for API protection |
+| **Amazon Transcribe** | Speech-to-text for multilingual voice input (V-05, V-07) |
 
 ### 6.3 External Integrations
 
@@ -363,7 +418,7 @@ Each agent has:
 | **Phase 2 — Content** | News aggregator + personalized feed | 4 weeks |
 | **Phase 3 — Community** | Community feed + Q&A + Marketplace | 6 weeks |
 | **Phase 4 — Intelligence** | Advanced agentic features: proactive follow-ups, cross-agent collaboration, learning from user feedback | 4 weeks |
-| **Phase 5 — Scale** | Multi-language, offline mode, voice input, analytics dashboard | 6 weeks |
+| **Phase 5 — Scale** | Multilingual voice assistant (7 languages, AWS Transcribe voice input, global language selector, i18n UI), offline mode, analytics dashboard | 6 weeks |
 
 ---
 
@@ -382,7 +437,7 @@ Each agent has:
 
 ## 13. Open Questions
 
-1. Which specific regional languages should be prioritized for Phase 5?
+1. ~~Which specific regional languages should be prioritized for Phase 5?~~ **Resolved:** Australian-focused — English (default), Mandarin, Cantonese, Vietnamese, Hindi, Italian, Arabic. See section 4.5.
 2. Should the marketplace support in-app payments, or keep transactions off-platform?
 3. What is the monetization strategy (freemium, subscription, ads, government subsidized)?
 4. Are there specific government agricultural databases or APIs to integrate with?

@@ -1,8 +1,10 @@
 /**
- * ChatInput component - message input bar with send button
+ * ChatInput component - message input bar with send, photo upload, and voice input buttons
  */
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useVoiceInput } from "../../hooks/useVoiceInput";
 import "./ChatInput.css";
 
 interface ChatInputProps {
@@ -16,9 +18,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   onSendMessage,
   onPhotoClick,
   isLoading = false,
-  placeholder = "Describe your crop issue...",
+  placeholder,
 }) => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
+
+  const [voiceState, voiceActions] = useVoiceInput({
+    onTranscript: (text) => setMessage(text),
+  });
 
   const handleSend = () => {
     if (message.trim() && !isLoading) {
@@ -34,17 +41,47 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     }
   };
 
+  const handleMicClick = () => {
+    if (voiceState.isRecording) {
+      voiceActions.stopRecording();
+    } else {
+      void voiceActions.startRecording();
+    }
+  };
+
+  const micLabel = voiceState.isRecording ? t("settings.voice.recording") : t("diagnosis.startMic");
+  const inputPlaceholder = voiceState.isTranscribing
+    ? t("settings.voice.transcribing")
+    : placeholder ?? t("diagnosis.placeholder");
+
   return (
     <div className="chat-input-container">
+      {voiceState.error && (
+        <div className="chat-input-voice-error">
+          <span>{voiceState.error}</span>
+          <button onClick={voiceActions.clearError} type="button" aria-label="Dismiss">✕</button>
+        </div>
+      )}
       <div className="chat-input-wrapper">
         <button
           className="photo-button"
           onClick={onPhotoClick}
           disabled={isLoading}
           type="button"
-          title="Upload photo"
+          title={t("diagnosis.uploadPhoto")}
         >
           📸
+        </button>
+
+        <button
+          className={`mic-button${voiceState.isRecording ? " mic-button--active" : ""}`}
+          onClick={handleMicClick}
+          disabled={isLoading || voiceState.isTranscribing}
+          type="button"
+          title={micLabel}
+          aria-label={micLabel}
+        >
+          {voiceState.isTranscribing ? "⏳" : voiceState.isRecording ? "⏹️" : "🎙️"}
         </button>
 
         <textarea
@@ -52,8 +89,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder={placeholder}
-          disabled={isLoading}
+          placeholder={inputPlaceholder}
+          disabled={isLoading || voiceState.isRecording || voiceState.isTranscribing}
           rows={1}
         />
 
@@ -62,7 +99,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           onClick={handleSend}
           disabled={isLoading || !message.trim()}
           type="button"
-          title="Send message"
+          title={t("diagnosis.send")}
         >
           {isLoading ? "..." : "📤"}
         </button>

@@ -1,5 +1,6 @@
+"use strict";
 /**
  * Shared types for Farm Planning Advisor feature
  */
-export {};
+Object.defineProperty(exports, "__esModule", { value: true });
 //# sourceMappingURL=farmRecommendation.types.js.map

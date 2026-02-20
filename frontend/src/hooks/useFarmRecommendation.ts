@@ -4,6 +4,7 @@
 
 import { useState, useCallback } from "react";
 import type { FarmRecommendationRequest, FarmRecommendationResponse } from "@harvest-ai/shared";
+import { getCurrentLanguage } from "./useLanguage";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
@@ -24,7 +25,7 @@ async function fetchRecommendations(
 ): Promise<FarmRecommendationResponse> {
   const response = await fetch(`${API_BASE_URL}/farm-recommendation`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-language": getCurrentLanguage() },
     body: JSON.stringify(request),
   });
 

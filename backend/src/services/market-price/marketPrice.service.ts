@@ -16,16 +16,20 @@ import {
   MARKET_PRICE_MODEL_ID,
   MARKET_PRICE_MAX_TOKENS,
 } from "../../constants/marketPrice.constants";
+import { LANGUAGE_NAMES } from "../../constants/voice.constants";
+import type { VoiceLanguageCode } from "@harvest-ai/shared";
 
 export class MarketPriceService {
   constructor(private readonly bedrock: BedrockRuntimeClient) {}
 
-  async getInsight(req: MarketInsightRequest): Promise<MarketInsightResponse> {
+  async getInsight(req: MarketInsightRequest, language = "en-AU"): Promise<MarketInsightResponse> {
+    const languageName = LANGUAGE_NAMES[language as VoiceLanguageCode] ?? "English";
+    const systemPrompt = `${MARKET_PRICE_SYSTEM_PROMPT}\n\nRespond in ${languageName}. The "reasoning" field must be in ${languageName}. Keep JSON keys in English.`;
     const userMessage = this.buildUserMessage(req);
     const body = JSON.stringify({
       anthropic_version: "bedrock-2023-05-31",
       max_tokens: MARKET_PRICE_MAX_TOKENS,
-      system: MARKET_PRICE_SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: [{ role: "user", content: userMessage }],
     });
 

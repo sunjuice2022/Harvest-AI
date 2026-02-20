@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "description": "Agentic AI platform for agriculture",
   "scripts": {
-    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w backend\"",
+    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev:mock -w backend\"",
     "build": "npm run build -ws",
     "test": "npm run test -ws",
     "lint": "eslint . --ext .ts,.tsx",
