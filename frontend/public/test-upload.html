@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Test</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 50px auto; }
+    .test { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+    .log { background: #f5f5f5; padding: 10px; margin-top: 10px; max-height: 300px; overflow-y: auto; }
+    button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>📸 Photo Upload Test</h1>
+
+  <div class="test">
+    <h3>Test 1: Upload via API</h3>
+    <button onclick="testUploadAPI()">Get Presigned URL</button>
+    <div class="log" id="log1"></div>
+  </div>
+
+  <div class="test">
+    <h3>Test 2: File Selection</h3>
+    <input type="file" id="photoInput" accept="image/*">
+    <button onclick="testFileSelect()">Check Selected File</button>
+    <div class="log" id="log2"></div>
+  </div>
+
+  <div class="test">
+    <h3>Test 3: Chat with Photo</h3>
+    <input type="text" id="messageInput" placeholder="Enter message" style="width: 70%; padding: 5px;">
+    <button onclick="testChatWithPhoto()">Send Message</button>
+    <div class="log" id="log3"></div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:3000/api';
+    const userId = 'test-user-' + Date.now();
+    let selectedFile = null;
+    let uploadedImageUrl = null;
+
+    function log(id, msg, isError = false) {
+      const elem = document.getElementById(id);
+      const line = document.createElement('div');
+      line.className = isError ? 'error' : 'success';
+      line.textContent = '> ' + msg;
+      elem.appendChild(line);
+      elem.scrollTop = elem.scrollHeight;
+    }
+
+    async function testUploadAPI() {
+      log('log1', '🔄 Requesting presigned URL...');
+      try {
+        const res = await fetch(`${API_BASE_URL}/diagnosis/upload`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': userId,
+          },
+          body: JSON.stringify({
+            fileName: 'test-image.jpg',
+            fileType: 'image/jpeg',
+          }),
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        log('log1', `✅ Got presigned URL`);
+        log('log1', `Upload ID: ${data.uploadId}`);
+        log('log1', `Expires in: ${data.expiresIn}s`);
+        uploadedImageUrl = data.presignedUrl.split('?')[0];
+      } catch (err) {
+        log('log1', `❌ Error: ${err.message}`, true);
+      }
+    }
+
+    function testFileSelect() {
+      const input = document.getElementById('photoInput');
+      const file = input.files[0];
+      
+      if (!file) {
+        log('log2', '❌ No file selected', true);
+        return;
+      }
+
+      selectedFile = file;
+      log('log2', `✅ File selected: ${file.name}`);
+      log('log2', `Size: ${(file.size / 1024).toFixed(2)} KB`);
+      log('log2', `Type: ${file.type}`);
+    }
+
+    async function testChatWithPhoto() {
+      const msgInput = document.getElementById('messageInput');
+      const message = msgInput.value;
+
+      if (!message) {
+        log('log3', '❌ Enter a message', true);
+        return;
+      }
+
+      log('log3', `📤 Sending: "${message}"`);
+      log('log3', `With photo: ${uploadedImageUrl ? 'Yes' : 'No'}`);
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/diagnosis/chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': userId,
+          },
+          body: JSON.stringify({
+            sessionId: 'test-session',
+            message: message,
+            imageUrl: uploadedImageUrl || null,
+          }),
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        const data = await res.json();
+        log('log3', `✅ Got diagnosis!`);
+        log('log3', `Condition: ${data.diagnosis.condition}`);
+        log('log3', `Confidence: ${data.diagnosis.confidence}%`);
+        log('log3', `Severity: ${data.diagnosis.severity}`);
+      } catch (err) {
+        log('log3', `❌ Error: ${err.message}`, true);
+      }
+    }
+  </script>
+</body>
+</html>

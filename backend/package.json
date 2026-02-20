@@ -1,28 +1,43 @@
 {
   "name": "@agrisense/backend",
   "version": "1.0.0",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
+    "dev": "tsc --watch",
+    "dev:mock": "ts-node tests/server.mock.ts",
     "build": "tsc",
     "test": "jest --passWithNoTests",
     "test:local": "ts-node --project tsconfig.json scripts/test-weather-agent.ts",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@agrisense/shared": "*",
-    "@aws-sdk/client-bedrock-runtime": "^3.0.0",
-    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.480.0",
+    "@aws-sdk/client-dynamodb": "^3.480.0",
+    "@aws-sdk/client-polly": "^3.994.0",
+    "@aws-sdk/client-s3": "^3.480.0",
     "@aws-sdk/client-sns": "^3.0.0",
-    "@aws-sdk/lib-dynamodb": "^3.0.0",
-    "aws-lambda": "^1.0.7"
+    "@aws-sdk/client-transcribe-streaming": "^3.994.0",
+    "@aws-sdk/lib-dynamodb": "^3.480.0",
+    "aws-lambda": "^1.0.7",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^2.0.2"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.140",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/jest": "^29.5.0",
-    "@types/node": "^20.0.0",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^20.10.6",
+    "dotenv": "^17.3.1",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.0",
-    "ts-node": "^10.9.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.0"
   }
 }

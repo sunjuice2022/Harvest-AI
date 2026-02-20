@@ -9,10 +9,32 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@agrisense/shared': resolve(__dirname, '../shared/index.ts'),
+      '@components': resolve(__dirname, './src/components'),
+      '@hooks': resolve(__dirname, './src/hooks'),
+      '@pages': resolve(__dirname, './src/pages'),
+      '@agrisense/shared': resolve(__dirname, '../shared/src'),
     },
   },
   server: {
     port: 3000,
+    strictPort: false,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'js/[name].[hash].js',
+        chunkFileNames: 'js/[name].[hash].js',
+        assetFileNames: '[ext]/[name].[hash].[ext]',
+      },
+    },
   },
 });

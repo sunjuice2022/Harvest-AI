@@ -1,90 +1,149 @@
-/** Weather dashboard page — displays current conditions, 7-day forecast, and active alerts. */
+/**
+ * Homepage with feature blocks for all planned platform features
+ */
 
-import { useEffect, useState } from 'react';
-import { useWeatherData } from '../hooks/useWeatherData.js';
-import { WeatherCard } from '../components/weather/WeatherCard.js';
-import { ForecastList } from '../components/weather/ForecastList.js';
-import { AlertBanner } from '../components/weather/AlertBanner.js';
-import styles from './HomePage.module.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import "./HomePage.css";
 
-interface DeviceLocation {
-  lat: number;
-  lng: number;
+interface Feature {
+  id: string;
+  icon: string;
+  name: string;
+  description: string;
+  status: "live" | "coming-soon";
+  href?: string;
 }
 
-export default function HomePage(): JSX.Element {
-  const [location, setLocation] = useState<DeviceLocation | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
+const FEATURES: Feature[] = [
+  {
+    id: "weather",
+    icon: "🌦️",
+    name: "Smart Weather & Disaster Alerts",
+    description:
+      "Real-time weather forecasts with high/low temperature alerts, flood and drought warnings, and early-stage natural disaster notifications to support timely farm decisions.",
+    status: "coming-soon",
+  },
+  {
+    id: "diagnosis",
+    icon: "🔬",
+    name: "AI Crop Disease Detection",
+    description:
+      "Farmers upload a crop image and AI instantly identifies diseases, diagnoses the issue, and provides clear treatment recommendations.",
+    status: "live",
+    href: "/diagnosis",
+  },
+  {
+    id: "crop-recommendation",
+    icon: "🌱",
+    name: "Farm Planning Advisor",
+    description:
+      "AI recommends the most profitable crops and livestock — including eggs, beef, dairy and more — based on your soil, climate, and market conditions.",
+    status: "live",
+    href: "/farm-recommendation",
+  },
+  {
+    id: "irrigation",
+    icon: "💧",
+    name: "Smart Irrigation Advisor",
+    description:
+      "Weather-aware irrigation scheduling that reduces water waste and ensures crops receive the right amount of water at the right time.",
+    status: "coming-soon",
+  },
+  {
+    id: "market",
+    icon: "📈",
+    name: "Market Price Intelligence",
+    description:
+      "Live market price tracking with AI-powered predictions to help farmers choose the best time to sell for maximum profit.",
+    status: "live",
+    href: "/market-prices",
+  },
+  {
+    id: "voice",
+    icon: "🎙️",
+    name: "Multilingual Voice Assistant",
+    description:
+      "Voice interaction system supporting regional languages, enabling low-literacy farmers to access information and services easily through voice.",
+    status: "live",
+    href: "/voice",
+  },
+  {
+    id: "community",
+    icon: "🤝",
+    name: "FarmUnity – Marketplace & Community",
+    description:
+      "A platform for farmers to sell goods directly, connect with buyers, and share knowledge within a supportive digital farming community.",
+    status: "coming-soon",
+  },
+  {
+    id: "hiring",
+    icon: "👷",
+    name: "Farmers Hand – Seasonal Hiring Hub",
+    description:
+      "A dedicated hub for seasonal labor hiring, helping farmers quickly find workers during peak farming periods.",
+    status: "coming-soon",
+  },
+];
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported by this browser.');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-      },
-      () => setLocationError('Unable to retrieve your location. Please update it in your profile.')
+const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
+  const inner = (
+    <>
+      <span className="feature-card__icon">{feature.icon}</span>
+      <div className="feature-card__body">
+        <div className="feature-card__header">
+          <h3 className="feature-card__name">{feature.name}</h3>
+          <span className={`feature-card__badge feature-card__badge--${feature.status}`}>
+            {feature.status === "live" ? "Live" : "Coming Soon"}
+          </span>
+        </div>
+        <p className="feature-card__description">{feature.description}</p>
+      </div>
+      {feature.status === "live" && <span className="feature-card__arrow">→</span>}
+    </>
+  );
+
+  if (feature.href) {
+    return (
+      <Link to={feature.href} className="feature-card feature-card--live">
+        {inner}
+      </Link>
     );
-  }, []);
-
-  const { forecast, alerts, isLoading, error, acknowledgeAlert } = useWeatherData(location);
-
-  if (!location && !locationError) {
-    return <LoadingScreen message="Detecting your location..." />;
   }
 
-  if (locationError) {
-    return <ErrorScreen message={locationError} />;
-  }
+  return <div className="feature-card feature-card--soon">{inner}</div>;
+};
 
-  if (isLoading) {
-    return <LoadingScreen message="Loading weather data..." />;
-  }
+export const HomePage: React.FC = () => (
+  <div className="home-page">
+    <Link to="/settings" className="home-settings-link" aria-label="Settings">
+      ⚙️
+    </Link>
+    <header className="home-hero">
+      <div className="home-hero__logo">🌾</div>
+      <h1 className="home-hero__title">
+        Harvest <span>AI</span>
+      </h1>
+      <p className="home-hero__subtitle">
+        AI-powered tools to help farmers grow smarter, reduce loss, and maximise profit.
+      </p>
+      <div className="home-hero__meta">
+        <span className="home-hero__meta-dot" />
+        4 features live · 4 coming soon
+      </div>
+    </header>
 
-  if (error) {
-    return <ErrorScreen message={error} />;
-  }
-
-  return (
-    <main className={styles.page}>
-      {alerts.length > 0 && (
-        <section className={styles.alerts} aria-label="Active weather alerts">
-          <h2 className={styles.sectionHeading}>Active Alerts</h2>
-          {alerts.map((alert) => (
-            <AlertBanner key={alert.alertId} alert={alert} onDismiss={acknowledgeAlert} />
-          ))}
-        </section>
-      )}
-
-      {forecast && (
-        <>
-          <section className={styles.current}>
-            <WeatherCard current={forecast.current} />
-          </section>
-          <section className={styles.forecast}>
-            <ForecastList days={forecast.days} />
-          </section>
-        </>
-      )}
+    <main className="home-features">
+      <h2 className="home-features__heading">Platform Features</h2>
+      <div className="home-features__grid">
+        {FEATURES.map((f) => (
+          <FeatureCard key={f.id} feature={f} />
+        ))}
+      </div>
     </main>
-  );
-}
 
-function LoadingScreen({ message }: { message: string }): JSX.Element {
-  return (
-    <div className={styles.centeredState} role="status" aria-live="polite">
-      <div className={styles.spinner} aria-hidden="true" />
-      <p className={styles.stateMessage}>{message}</p>
-    </div>
-  );
-}
-
-function ErrorScreen({ message }: { message: string }): JSX.Element {
-  return (
-    <div className={styles.centeredState} role="alert">
-      <p className={styles.stateMessage}>{message}</p>
-    </div>
-  );
-}
+    <footer className="home-footer">
+      © {new Date().getFullYear()} Harvest AI · Powered by Amazon Bedrock
+    </footer>
+  </div>
+);

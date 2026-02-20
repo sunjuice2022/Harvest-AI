@@ -1,13 +1,18 @@
 {
-  "name": "infrastructure",
+  "name": "@agrisense/infrastructure",
   "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "cdk": "cdk"
+    "test": "jest",
+    "deploy": "cdk deploy",
+    "synth": "cdk synth",
+    "cdk": "cdk",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@agrisense/shared": "*",
     "aws-cdk-lib": "^2.170.0",
     "constructs": "^10.0.0"
   },

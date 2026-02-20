@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "diagnosis": "Crop Diagnosis",
+    "farmPlanning": "Farm Planning",
+    "marketPrices": "Market Prices",
+    "settings": "Settings",
+    "back": "← Back"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Customise your AgriSense AI experience",
+    "language": {
+      "title": "Language",
+      "description": "Select the language for AI responses and the app interface.",
+      "label": "Preferred Language",
+      "saved": "Language saved"
+    },
+    "voice": {
+      "title": "Voice Input",
+      "description": "Tap the microphone icon in the Crop Diagnosis chat to speak your question. Supported in all 7 languages.",
+      "notSupported": "Voice input is not available for your current language.",
+      "permissionDenied": "Microphone access denied. Please allow microphone access in your browser settings.",
+      "recording": "Listening…",
+      "transcribing": "Transcribing…"
+    },
+    "aboriginal": {
+      "notice": "Aboriginal & Torres Strait Islander languages are not yet supported by voice input. Text-based interaction is available in English."
+    }
+  },
+  "diagnosis": {
+    "title": "Crop Diagnosis",
+    "subtitle": "AI-powered crop disease and pest detection",
+    "placeholder": "Describe your crop issue or upload a photo…",
+    "send": "Send",
+    "startMic": "Start voice input",
+    "stopMic": "Stop recording",
+    "uploadPhoto": "Upload photo",
+    "loading": "Analysing your crop…",
+    "newSession": "New Session",
+    "confidence": "Confidence",
+    "severity": "Severity",
+    "treatment": "Treatment",
+    "organicAlternatives": "Organic Alternatives",
+    "preventionTips": "Prevention Tips"
+  },
+  "farmPlanning": {
+    "title": "Farm Planning Advisor",
+    "subtitle": "AI recommends the most profitable crops and livestock based on your conditions.",
+    "submit": "Get Recommendations",
+    "loading": "AI is analysing your conditions…",
+    "cropRecommendations": "Crop Recommendations",
+    "livestockRecommendations": "Livestock Recommendations",
+    "suitability": "Suitability",
+    "demand": {
+      "high": "↑ High Demand",
+      "medium": "→ Med Demand",
+      "low": "↓ Low Demand"
+    }
+  },
+  "marketPrices": {
+    "title": "Market Prices",
+    "subtitle": "Live commodity prices with AI-powered insights",
+    "loading": "Loading prices…",
+    "getInsight": "Get AI Insight"
+  },
+  "voiceAssistant": {
+    "title": "Voice Assistant",
+    "subtitle": "Ask me anything about farming",
+    "placeholder": "Ask a farming question or tap the mic…",
+    "startMic": "Start voice input",
+    "empty": "Tap the mic 🎙️ or type a question to get started."
+  },
+  "common": {
+    "error": "Something went wrong. Please try again.",
+    "retry": "Retry",
+    "dismiss": "Dismiss",
+    "loading": "Loading…",
+    "backToHome": "← Home"
+  }
+}

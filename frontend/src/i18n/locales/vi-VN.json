@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "diagnosis": "Chẩn đoán cây trồng",
+    "farmPlanning": "Kế hoạch nông trại",
+    "marketPrices": "Giá thị trường",
+    "settings": "Cài đặt",
+    "back": "← Quay lại"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Tuỳ chỉnh trải nghiệm AgriSense AI của bạn",
+    "language": {
+      "title": "Ngôn ngữ",
+      "description": "Chọn ngôn ngữ cho phản hồi AI và giao diện ứng dụng.",
+      "label": "Ngôn ngữ ưu tiên",
+      "saved": "Đã lưu ngôn ngữ"
+    },
+    "voice": {
+      "title": "Nhập giọng nói",
+      "description": "Nhấn biểu tượng micrô trong hộp chat Chẩn đoán cây trồng để đặt câu hỏi bằng giọng nói. Hỗ trợ cả 7 ngôn ngữ.",
+      "notSupported": "Nhập giọng nói không khả dụng cho ngôn ngữ hiện tại của bạn.",
+      "permissionDenied": "Quyền truy cập micrô bị từ chối. Vui lòng cho phép trong cài đặt trình duyệt.",
+      "recording": "Đang lắng nghe…",
+      "transcribing": "Đang chuyển đổi…"
+    },
+    "aboriginal": {
+      "notice": "Nhập giọng nói chưa hỗ trợ ngôn ngữ thổ dân Úc. Tương tác văn bản hỗ trợ tiếng Anh."
+    }
+  },
+  "diagnosis": {
+    "title": "Chẩn đoán cây trồng",
+    "subtitle": "Phát hiện bệnh và sâu hại cây trồng bằng AI",
+    "placeholder": "Mô tả vấn đề cây trồng hoặc tải ảnh lên…",
+    "send": "Gửi",
+    "startMic": "Bắt đầu nhập giọng nói",
+    "stopMic": "Dừng ghi âm",
+    "uploadPhoto": "Tải ảnh lên",
+    "loading": "Đang phân tích cây trồng của bạn…",
+    "newSession": "Phiên mới",
+    "confidence": "Độ tin cậy",
+    "severity": "Mức độ nghiêm trọng",
+    "treatment": "Phương pháp điều trị",
+    "organicAlternatives": "Giải pháp hữu cơ thay thế",
+    "preventionTips": "Mẹo phòng ngừa"
+  },
+  "farmPlanning": {
+    "title": "Tư vấn kế hoạch nông trại",
+    "subtitle": "AI đề xuất cây trồng và vật nuôi có lợi nhất dựa trên điều kiện của bạn.",
+    "submit": "Nhận đề xuất",
+    "loading": "AI đang phân tích điều kiện của bạn…",
+    "cropRecommendations": "Đề xuất cây trồng",
+    "livestockRecommendations": "Đề xuất vật nuôi",
+    "suitability": "Độ phù hợp",
+    "demand": {
+      "high": "↑ Nhu cầu cao",
+      "medium": "→ Nhu cầu trung bình",
+      "low": "↓ Nhu cầu thấp"
+    }
+  },
+  "marketPrices": {
+    "title": "Giá thị trường",
+    "subtitle": "Giá hàng hoá trực tiếp với phân tích AI",
+    "loading": "Đang tải giá…",
+    "getInsight": "Nhận phân tích AI"
+  },
+  "common": {
+    "error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "retry": "Thử lại",
+    "dismiss": "Đóng",
+    "loading": "Đang tải…",
+    "backToHome": "← Trang chủ"
+  }
+}

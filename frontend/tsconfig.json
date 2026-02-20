@@ -6,12 +6,18 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vite/client"],
     "rootDir": "src",
     "outDir": "dist",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@agrisense/shared": ["../shared/index.ts"]
+      "@agrisense/shared": ["../shared/src"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@pages/*": ["./src/pages/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

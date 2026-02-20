@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "主頁",
+    "diagnosis": "作物診斷",
+    "farmPlanning": "農場規劃",
+    "marketPrices": "市場價格",
+    "settings": "設定",
+    "back": "← 返回"
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "自訂您的 AgriSense AI 體驗",
+    "language": {
+      "title": "語言",
+      "description": "選擇AI回覆及應用程式介面的語言。",
+      "label": "首選語言",
+      "saved": "語言已儲存"
+    },
+    "voice": {
+      "title": "語音輸入",
+      "description": "點擊作物診斷對話框中的麥克風圖示，即可語音提問。支援全部7種語言。",
+      "notSupported": "您目前的語言不支援語音輸入。",
+      "permissionDenied": "麥克風存取被拒絕，請在瀏覽器設定中允許麥克風存取。",
+      "recording": "正在聆聽…",
+      "transcribing": "正在轉錄…"
+    },
+    "aboriginal": {
+      "notice": "語音輸入暫不支援澳洲原住民語言，文字互動支援英語。"
+    }
+  },
+  "diagnosis": {
+    "title": "作物診斷",
+    "subtitle": "AI驅動的作物病蟲害偵測",
+    "placeholder": "描述您的作物問題或上傳照片…",
+    "send": "發送",
+    "startMic": "開始語音輸入",
+    "stopMic": "停止錄音",
+    "uploadPhoto": "上傳照片",
+    "loading": "正在分析您的作物…",
+    "newSession": "新對話",
+    "confidence": "信心度",
+    "severity": "嚴重程度",
+    "treatment": "治療方法",
+    "organicAlternatives": "有機替代方案",
+    "preventionTips": "預防建議"
+  },
+  "farmPlanning": {
+    "title": "農場規劃顧問",
+    "subtitle": "AI根據您的條件推薦最具盈利潛力的作物和牲畜。",
+    "submit": "獲取建議",
+    "loading": "AI正在分析您的農場條件…",
+    "cropRecommendations": "作物建議",
+    "livestockRecommendations": "牲畜建議",
+    "suitability": "適合度",
+    "demand": {
+      "high": "↑ 高需求",
+      "medium": "→ 中等需求",
+      "low": "↓ 低需求"
+    }
+  },
+  "marketPrices": {
+    "title": "市場價格",
+    "subtitle": "實時商品價格及AI分析",
+    "loading": "正在載入價格…",
+    "getInsight": "獲取AI分析"
+  },
+  "common": {
+    "error": "出現錯誤，請重試。",
+    "retry": "重試",
+    "dismiss": "關閉",
+    "loading": "載入中…",
+    "backToHome": "← 主頁"
+  }
+}

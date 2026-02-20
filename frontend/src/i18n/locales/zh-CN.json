@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "首页",
+    "diagnosis": "作物诊断",
+    "farmPlanning": "农场规划",
+    "marketPrices": "市场价格",
+    "settings": "设置",
+    "back": "← 返回"
+  },
+  "settings": {
+    "title": "设置",
+    "subtitle": "自定义您的 AgriSense AI 体验",
+    "language": {
+      "title": "语言",
+      "description": "选择AI回复和应用界面的语言。",
+      "label": "首选语言",
+      "saved": "语言已保存"
+    },
+    "voice": {
+      "title": "语音输入",
+      "description": "点击作物诊断对话框中的麦克风图标，即可语音提问。支持全部7种语言。",
+      "notSupported": "您当前的语言不支持语音输入。",
+      "permissionDenied": "麦克风访问被拒绝，请在浏览器设置中允许麦克风访问。",
+      "recording": "正在聆听…",
+      "transcribing": "正在转录…"
+    },
+    "aboriginal": {
+      "notice": "语音输入暂不支持澳大利亚原住民语言，文字交互支持英语。"
+    }
+  },
+  "diagnosis": {
+    "title": "作物诊断",
+    "subtitle": "AI驱动的作物病虫害检测",
+    "placeholder": "描述您的作物问题或上传照片…",
+    "send": "发送",
+    "startMic": "开始语音输入",
+    "stopMic": "停止录音",
+    "uploadPhoto": "上传照片",
+    "loading": "正在分析您的作物…",
+    "newSession": "新会话",
+    "confidence": "置信度",
+    "severity": "严重程度",
+    "treatment": "治疗方法",
+    "organicAlternatives": "有机替代方案",
+    "preventionTips": "预防建议"
+  },
+  "farmPlanning": {
+    "title": "农场规划顾问",
+    "subtitle": "AI根据您的条件推荐最具盈利潜力的作物和牲畜。",
+    "submit": "获取建议",
+    "loading": "AI正在分析您的农场条件…",
+    "cropRecommendations": "作物建议",
+    "livestockRecommendations": "牲畜建议",
+    "suitability": "适合度",
+    "demand": {
+      "high": "↑ 高需求",
+      "medium": "→ 中等需求",
+      "low": "↓ 低需求"
+    }
+  },
+  "marketPrices": {
+    "title": "市场价格",
+    "subtitle": "实时商品价格及AI分析",
+    "loading": "正在加载价格…",
+    "getInsight": "获取AI分析"
+  },
+  "common": {
+    "error": "出现错误，请重试。",
+    "retry": "重试",
+    "dismiss": "关闭",
+    "loading": "加载中…",
+    "backToHome": "← 首页"
+  }
+}

@@ -1,0 +1,211 @@
+.market-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1a2e05 0%, #2d4a0e 50%, #1a2e05 100%);
+  color: #fff;
+  padding: 2rem 1.5rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Header */
+.market-header {
+  margin-bottom: 2rem;
+}
+
+.market-header__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(132, 204, 22, 0.8);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  transition: color 0.15s;
+}
+
+.market-header__back:hover {
+  color: #84cc16;
+}
+
+.market-header__title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.market-header__title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.market-header__updated {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.market-header__subtitle {
+  margin: 0.4rem 0 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.95rem;
+}
+
+/* Source badges */
+.market-header__sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.market-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.market-source-badge--wb {
+  background: rgba(132, 204, 22, 0.12);
+  border: 1px solid rgba(132, 204, 22, 0.35);
+  color: #84cc16;
+}
+
+.market-source-badge--wb a {
+  color: #84cc16;
+  text-decoration: underline;
+  text-decoration-color: rgba(132, 204, 22, 0.4);
+}
+
+.market-source-badge--ai a {
+  color: #a5b4fc;
+  text-decoration: underline;
+  text-decoration-color: rgba(165, 180, 252, 0.4);
+}
+
+.market-source-badge--est {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.market-source-badge--ai {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: #a5b4fc;
+}
+
+/* Disclaimer */
+.market-header__disclaimer {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.market-header__disclaimer a {
+  color: rgba(132, 204, 22, 0.6);
+  text-decoration: none;
+}
+
+.market-header__disclaimer a:hover {
+  color: #84cc16;
+  text-decoration: underline;
+}
+
+/* Loading / error */
+.market-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  padding: 3rem 0;
+  justify-content: center;
+}
+
+.market-loading__spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(132, 204, 22, 0.3);
+  border-top-color: #84cc16;
+  border-radius: 50%;
+  animation: mp-spin 0.7s linear infinite;
+}
+
+@keyframes mp-spin {
+  to { transform: rotate(360deg); }
+}
+
+.market-error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+/* Section titles */
+.market-section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.9rem;
+}
+
+/* Featured grid */
+.market-featured {
+  margin-bottom: 2.5rem;
+}
+
+.market-featured__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.9rem;
+}
+
+@media (max-width: 960px) {
+  .market-featured__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .market-featured__grid { grid-template-columns: 1fr; }
+}
+
+.market-featured__detail {
+  margin-top: 0.75rem;
+}
+
+/* Commodity list */
+.market-list-section {
+  background: rgba(26, 46, 5, 0.45);
+  border: 1px solid rgba(132, 204, 22, 0.12);
+  border-radius: 16px;
+  padding: 1.2rem 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.market-list-section .market-section-title {
+  margin-bottom: 0.75rem;
+}
+
+.market-list {
+  margin-top: 0.75rem;
+}
+
+.market-list__empty {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  padding: 1.5rem 0;
+  text-align: center;
+}
