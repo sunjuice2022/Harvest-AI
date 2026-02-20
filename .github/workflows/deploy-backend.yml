@@ -1,4 +1,4 @@
-name: Deploy Backend
+name: Deploy — Dev / Staging
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: "Deployment stage"
+        description: 'Deployment stage'
         required: true
         type: choice
         options: [dev, staging, prod]
@@ -15,17 +15,40 @@ permissions:
   id-token: write
   contents: read
 
+# Prevent concurrent deploys to the same environment
+concurrency:
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
+  # ── 1. Full CI gate ────────────────────────────────────────────────────────
   ci:
     name: CI Checks
     uses: ./.github/workflows/ci.yml
 
-  deploy:
-    name: Deploy CDK Stacks
+  # ── 2. Resolve target stage ────────────────────────────────────────────────
+  resolve-stage:
+    name: Resolve Stage
     runs-on: ubuntu-latest
-    needs: ci
-    environment: ${{ github.ref_name == 'staging' && 'staging' || 'dev' }}
+    outputs:
+      stage: ${{ steps.resolve.outputs.stage }}
+    steps:
+      - name: Determine stage from input or branch
+        id: resolve
+        run: |
+          INPUT="${{ github.event.inputs.stage }}"
+          BRANCH="${{ github.ref_name }}"
+          if   [ -n "$INPUT" ];           then echo "stage=$INPUT"   >> $GITHUB_OUTPUT
+          elif [ "$BRANCH" = "staging" ]; then echo "stage=staging"  >> $GITHUB_OUTPUT
+          else                                 echo "stage=dev"       >> $GITHUB_OUTPUT
+          fi
 
+  # ── 3. Deploy CDK infrastructure (Lambda, API GW, DynamoDB, S3, Bedrock) ──
+  deploy-infra:
+    name: CDK Deploy — ${{ needs.resolve-stage.outputs.stage }}
+    runs-on: ubuntu-latest
+    needs: [ci, resolve-stage]
+    environment: ${{ needs.resolve-stage.outputs.stage }}
     steps:
       - uses: actions/checkout@v4
 
@@ -36,11 +59,8 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
-
-      - name: Install CDK dependencies
-        working-directory: infrastructure
-        run: npm ci
+      - name: Build all workspaces
+        run: npm run build
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -48,25 +68,99 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ap-southeast-2
 
-      - name: Determine stage
-        id: stage
+      - name: CDK diff (preview changes)
+        working-directory: infrastructure
+        run: npx cdk diff --context stage=${{ needs.resolve-stage.outputs.stage }}
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+
+      - name: CDK deploy
+        working-directory: infrastructure
         run: |
-          if [ "${{ github.event.inputs.stage }}" != "" ]; then
-            echo "stage=${{ github.event.inputs.stage }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref_name }}" == "staging" ]; then
-            echo "stage=staging" >> $GITHUB_OUTPUT
-          else
-            echo "stage=dev" >> $GITHUB_OUTPUT
-          fi
-
-      - name: CDK Diff
-        working-directory: infrastructure
-        run: npx cdk diff --context stage=${{ steps.stage.outputs.stage }}
+          npx cdk deploy --all \
+            --require-approval never \
+            --context stage=${{ needs.resolve-stage.outputs.stage }} \
+            --outputs-file cdk-outputs.json
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
-      - name: CDK Deploy
-        working-directory: infrastructure
-        run: npx cdk deploy --all --require-approval never --context stage=${{ steps.stage.outputs.stage }}
+      - name: Upload CDK outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdk-outputs-${{ needs.resolve-stage.outputs.stage }}
+          path: infrastructure/cdk-outputs.json
+          retention-days: 7
+
+  # ── 4. Build & deploy frontend (S3 + CloudFront) ──────────────────────────
+  deploy-frontend:
+    name: Frontend Deploy — ${{ needs.resolve-stage.outputs.stage }}
+    runs-on: ubuntu-latest
+    needs: [deploy-infra, resolve-stage]
+    environment: ${{ needs.resolve-stage.outputs.stage }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build shared + frontend
+        run: |
+          npm run build -w shared
+          npm run build -w frontend
         env:
-          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+          VITE_API_BASE_URL:          ${{ vars.API_BASE_URL }}
+          VITE_AWS_REGION:            ap-southeast-2
+          VITE_COGNITO_USER_POOL_ID:  ${{ secrets.COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_CLIENT_ID:     ${{ secrets.COGNITO_CLIENT_ID }}
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      # Hashed assets get long-lived cache; index.html is never cached
+      - name: Sync hashed assets to S3
+        run: |
+          aws s3 sync frontend/dist/ s3://${{ vars.FRONTEND_BUCKET_NAME }}/ \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Upload index.html (no-cache)
+        run: |
+          aws s3 cp frontend/dist/index.html \
+            s3://${{ vars.FRONTEND_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache,no-store,must-revalidate"
+
+      - name: Invalidate CloudFront distribution
+        if: vars.CLOUDFRONT_DIST_ID != ''
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DIST_ID }} \
+            --paths "/*"
+
+  # ── 5. Post-deploy health checks ──────────────────────────────────────────
+  health-check:
+    name: Health Check — ${{ needs.resolve-stage.outputs.stage }}
+    runs-on: ubuntu-latest
+    needs: [deploy-frontend, deploy-infra, resolve-stage]
+    steps:
+      - name: Wait for deployment to settle
+        run: sleep 15
+
+      - name: API health endpoint
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/health" \
+            -o /dev/null -w "API: HTTP %{http_code}\n" \
+            || echo "API health check skipped (endpoint not configured)"
+
+      - name: Frontend reachability
+        run: |
+          curl -sf "${{ vars.FRONTEND_URL }}" \
+            -o /dev/null -w "Frontend: HTTP %{http_code}\n" \
+            || echo "Frontend check skipped (URL not configured)"

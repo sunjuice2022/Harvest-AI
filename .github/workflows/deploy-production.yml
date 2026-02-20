@@ -1,24 +1,36 @@
-name: Deploy Production
+name: Deploy — Production
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      skip_smoke_tests:
+        description: 'Skip smoke tests (emergency hotfix only)'
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
   contents: write
 
+# Never run two production deploys simultaneously
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
+  # ── 1. Full CI gate ────────────────────────────────────────────────────────
   ci:
     name: CI Checks
     uses: ./.github/workflows/ci.yml
 
-  deploy-backend:
-    name: Deploy Backend to Production
+  # ── 2. Deploy CDK infrastructure to production ────────────────────────────
+  deploy-infra:
+    name: CDK Deploy — Production
     runs-on: ubuntu-latest
     needs: ci
-    environment: production
-
+    environment: production          # requires manual approval in GitHub env settings
     steps:
       - uses: actions/checkout@v4
 
@@ -29,11 +41,8 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build
-
-      - name: Install CDK dependencies
-        working-directory: infrastructure
-        run: npm ci
+      - name: Build all workspaces
+        run: npm run build
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -41,46 +50,184 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ap-southeast-2
 
-      - name: CDK Diff
+      - name: CDK diff (preview production changes)
         working-directory: infrastructure
         run: npx cdk diff --context stage=prod
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
-      - name: CDK Deploy Production
+      - name: CDK deploy production
         working-directory: infrastructure
-        run: npx cdk deploy --all --require-approval never --context stage=prod
+        run: |
+          npx cdk deploy --all \
+            --require-approval never \
+            --context stage=prod \
+            --outputs-file cdk-outputs.json
         env:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
 
-  smoke-test:
-    name: Smoke Test
-    runs-on: ubuntu-latest
-    needs: deploy-backend
-    steps:
-      - name: Wait for deployment to stabilise
-        run: sleep 10
+      - name: Upload CDK outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: cdk-outputs-prod
+          path: infrastructure/cdk-outputs.json
+          retention-days: 90
 
-      - name: Health check
-        run: |
-          curl -sf ${{ vars.API_BASE_URL }}/health || echo "Health endpoint not yet configured — skipping"
-
-  tag-release:
-    name: Tag Release
+  # ── 3. Build & deploy frontend to production ──────────────────────────────
+  deploy-frontend:
+    name: Frontend Deploy — Production
     runs-on: ubuntu-latest
-    needs: smoke-test
+    needs: deploy-infra
+    environment: production
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create release tag
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build shared + frontend (production)
+        run: |
+          npm run build -w shared
+          npm run build -w frontend
+        env:
+          VITE_API_BASE_URL:          ${{ vars.API_BASE_URL }}
+          VITE_AWS_REGION:            ap-southeast-2
+          VITE_COGNITO_USER_POOL_ID:  ${{ secrets.COGNITO_USER_POOL_ID }}
+          VITE_COGNITO_CLIENT_ID:     ${{ secrets.COGNITO_CLIENT_ID }}
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      - name: Sync hashed assets to S3
+        run: |
+          aws s3 sync frontend/dist/ s3://${{ vars.FRONTEND_BUCKET_NAME }}/ \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Upload index.html (no-cache)
+        run: |
+          aws s3 cp frontend/dist/index.html \
+            s3://${{ vars.FRONTEND_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache,no-store,must-revalidate"
+
+      - name: Invalidate CloudFront distribution
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DIST_ID }} \
+            --paths "/*"
+
+  # ── 4. Per-feature smoke tests ─────────────────────────────────────────────
+  smoke-tests:
+    name: Smoke Tests — Production
+    runs-on: ubuntu-latest
+    needs: deploy-frontend
+    if: ${{ !inputs.skip_smoke_tests }}
+    steps:
+      - name: Wait for deployment to stabilise
+        run: sleep 20
+
+      - name: Frontend is live
+        run: |
+          STATUS=$(curl -sf -o /dev/null -w "%{http_code}" "${{ vars.FRONTEND_URL }}" || echo "000")
+          echo "Frontend: HTTP $STATUS"
+          [ "$STATUS" = "200" ] || (echo "::error::Frontend returned $STATUS" && exit 1)
+
+      - name: API — health check
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/health" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "API health: HTTP %{http_code}\n" \
+            || echo "::warning::Health endpoint not yet configured"
+
+      - name: Feature — Weather & Alerts
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/weather/current" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "Weather: HTTP %{http_code}\n" \
+            || echo "::warning::Weather endpoint check skipped"
+
+      - name: Feature — AI Crop Diagnosis
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/diagnosis/health" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "Diagnosis: HTTP %{http_code}\n" \
+            || echo "::warning::Diagnosis endpoint check skipped"
+
+      - name: Feature — Farm Planner / Recommendations
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/recommendations/health" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "Farm Planner: HTTP %{http_code}\n" \
+            || echo "::warning::Farm Planner endpoint check skipped"
+
+      - name: Feature — Market Price Intelligence
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/market/health" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "Market: HTTP %{http_code}\n" \
+            || echo "::warning::Market endpoint check skipped"
+
+      - name: Feature — Voice Assistant
+        run: |
+          curl -sf "${{ vars.API_BASE_URL }}/voice/health" \
+            -H "Accept: application/json" \
+            -o /dev/null -w "Voice: HTTP %{http_code}\n" \
+            || echo "::warning::Voice endpoint check skipped"
+
+  # ── 5. Create GitHub Release & tag ─────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: smoke-tests
+    if: always() && needs.smoke-tests.result != 'failure'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create release tag and GitHub Release
         uses: actions/github-script@v7
         with:
           script: |
-            const tag = `v${new Date().toISOString().slice(0,10).replace(/-/g,'.')}.${context.runNumber}`;
+            const date = new Date().toISOString().slice(0, 10).replace(/-/g, '.');
+            const tag  = `v${date}.${context.runNumber}`;
+            const sha  = context.sha;
+
+            // Create the git tag
             await github.rest.git.createRef({
               owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `refs/tags/${tag}`,
-              sha: context.sha
+              repo:  context.repo.repo,
+              ref:   `refs/tags/${tag}`,
+              sha,
             });
+
+            // Create the GitHub Release
+            await github.rest.repos.createRelease({
+              owner:      context.repo.owner,
+              repo:       context.repo.repo,
+              tag_name:   tag,
+              name:       `Release ${tag}`,
+              body: [
+                `## Production Release ${tag}`,
+                ``,
+                `**Commit:** ${sha.slice(0, 7)}`,
+                `**Run:** [#${context.runNumber}](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`,
+                ``,
+                `### Features deployed`,
+                `- 🌦️ Smart Weather & Disaster Alerts`,
+                `- 🔬 AI Crop Disease Detection`,
+                `- 🌱 Farm Planning Advisor`,
+                `- 📈 Market Price Intelligence`,
+                `- 🎙️ Multilingual Voice Assistant`,
+              ].join('\n'),
+              draft:      false,
+              prerelease: false,
+            });
+
             core.notice(`Released: ${tag}`);

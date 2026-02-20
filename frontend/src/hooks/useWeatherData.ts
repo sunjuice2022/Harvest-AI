@@ -18,26 +18,31 @@ interface WeatherLocation {
 export function useWeatherData(location: WeatherLocation | null): UseWeatherDataResult {
   const [forecast, setForecast] = useState<WeatherForecast | null>(null);
   const [alerts, setAlerts] = useState<WeatherAlert[]>([]);
+  const [advisory, setAdvisory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const lat = location?.lat;
+  const lng = location?.lng;
+
   const loadWeatherData = useCallback(async () => {
-    if (!location) return;
+    if (lat === undefined || lng === undefined) return;
 
     try {
       setError(null);
       const [forecastResponse, alertsResponse] = await Promise.all([
-        fetchWeatherForecast(location.lat, location.lng),
+        fetchWeatherForecast(lat, lng),
         fetchWeatherAlerts(),
       ]);
       setForecast(forecastResponse.forecast);
       setAlerts(alertsResponse.alerts);
+      setAdvisory(forecastResponse.advisory ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load weather data');
     } finally {
       setIsLoading(false);
     }
-  }, [location]);
+  }, [lat, lng]);
 
   useEffect(() => {
     void loadWeatherData();
@@ -53,6 +58,7 @@ export function useWeatherData(location: WeatherLocation | null): UseWeatherData
   return {
     forecast,
     alerts,
+    advisory,
     isLoading,
     error,
     refetch: () => void loadWeatherData(),

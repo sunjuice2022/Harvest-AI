@@ -10,7 +10,7 @@
     "infrastructure"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev:mock -w backend\"",
+    "dev": "concurrently \"npm run dev -w frontend\" \"PORT=3001 npm run dev:mock -w backend\"",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",

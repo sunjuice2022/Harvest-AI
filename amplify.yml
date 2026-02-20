@@ -1,19 +1,34 @@
 version: 1
 applications:
-  - frontend:
+  - appRoot: .
+    frontend:
       phases:
         preBuild:
           commands:
+            # Pin Node version (matches GitHub Actions)
+            - nvm use 22 || nvm install 22 && nvm use 22
+            - node --version
+            - npm --version
+            # Install all workspace dependencies from root
             - npm ci
+            # Build shared package first (frontend depends on it)
             - npm run build -w shared
         build:
           commands:
             - npm run build -w frontend
+        postBuild:
+          commands:
+            - echo "Build complete — dist size:"
+            - du -sh frontend/dist/
       artifacts:
         baseDirectory: frontend/dist
         files:
           - "**/*"
       cache:
         paths:
+          # Cache workspace node_modules for faster installs
           - node_modules/**/*
-    appRoot: .
+          - frontend/node_modules/**/*
+          - shared/node_modules/**/*
+          # Cache shared build output
+          - shared/dist/**/*

@@ -22,7 +22,8 @@ const FEATURES: Feature[] = [
     name: "Smart Weather & Disaster Alerts",
     description:
       "Real-time weather forecasts with high/low temperature alerts, flood and drought warnings, and early-stage natural disaster notifications to support timely farm decisions.",
-    status: "coming-soon",
+    status: "live",
+    href: "/weather",
   },
   {
     id: "diagnosis",
@@ -114,8 +115,71 @@ const FeatureCard: React.FC<{ feature: Feature }> = ({ feature }) => {
   return <div className="feature-card feature-card--soon">{inner}</div>;
 };
 
-export const HomePage: React.FC = () => (
+interface NavLink {
+  label: string;
+  items: string[];
+}
+
+const NAV_LINKS: NavLink[] = [
+  {
+    label: "Solutions",
+    items: ["Smart Farming", "Crop Disease Detection", "Market Intelligence", "Weather Alerts"],
+  },
+  {
+    label: "Products",
+    items: ["Weather & Alerts", "AI Crop Diagnosis", "Farm Planner", "Market Prices", "Voice Assistant"],
+  },
+  {
+    label: "Use Cases",
+    items: ["Smallholder Farms", "Large Enterprises", "Cooperatives", "AgriTech Partners"],
+  },
+  {
+    label: "Support",
+    items: ["Documentation", "API Reference", "Community Forum", "Contact Us"],
+  },
+  {
+    label: "About Us",
+    items: ["Our Mission", "Team", "Careers", "Press"],
+  },
+];
+
+const HomePage: React.FC = () => (
   <div className="home-page">
+    {/* ── Navbar ── */}
+    <nav className="home-nav" aria-label="Main navigation">
+      <div className="home-nav__inner">
+        <Link to="/" className="home-nav__logo">
+          <span className="home-nav__logo-icon">🌾</span>
+          <span className="home-nav__logo-text">
+            Harvest <span className="home-nav__logo-accent">AI</span>
+          </span>
+        </Link>
+
+        <ul className="home-nav__links">
+          {NAV_LINKS.map(({ label, items }) => (
+            <li key={label} className="home-nav__item">
+              <a href="#" className="home-nav__link">
+                {label}
+                <span className="home-nav__chevron" aria-hidden="true" />
+              </a>
+              <div className="home-nav__dropdown" role="menu">
+                {items.map((item) => (
+                  <a key={item} href="#" className="home-nav__dropdown-item" role="menuitem">
+                    {item}
+                  </a>
+                ))}
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="home-nav__actions">
+          <span className="home-nav__divider" aria-hidden="true">|</span>
+          <a href="#" className="home-nav__login">Log In</a>
+        </div>
+      </div>
+    </nav>
+
     <Link to="/settings" className="home-settings-link" aria-label="Settings">
       ⚙️
     </Link>
@@ -129,7 +193,7 @@ export const HomePage: React.FC = () => (
       </p>
       <div className="home-hero__meta">
         <span className="home-hero__meta-dot" />
-        4 features live · 4 coming soon
+        5 features live · 3 coming soon
       </div>
     </header>
 
@@ -147,3 +211,5 @@ export const HomePage: React.FC = () => (
     </footer>
   </div>
 );
+
+export default HomePage;

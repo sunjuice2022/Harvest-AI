@@ -7,9 +7,236 @@
 
 .home-page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #0d1a02 0%, #1a2e05 45%, #2d4a0e 100%);
+  padding-top: 64px; /* offset for fixed navbar */
+  /* Farm photo background — light transparent green tint */
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(10, 40, 5, 0.10) 0%,
+      rgba(120, 190, 60, 0.06) 45%,
+      rgba(8, 30, 3, 0.42) 100%
+    ),
+    url('/farm-bg.jpg') center / cover no-repeat fixed;
   color: var(--color-white);
   font-family: var(--font-primary);
+}
+
+/* ── Navbar ─────────────────────────────────────────────────────────────── */
+
+.home-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  height: 64px;
+  background: rgba(8, 24, 3, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(132, 204, 22, 0.12);
+  transition: background 0.3s ease;
+}
+
+.home-nav__inner {
+  display: flex;
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 48px);
+  height: 100%;
+  gap: var(--spacing-xl);
+}
+
+/* Logo */
+.home-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.home-nav__logo-icon {
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(132, 204, 22, 0.5));
+}
+
+.home-nav__logo-text {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+
+.home-nav__logo-accent {
+  color: var(--color-leaf-green);
+}
+
+/* Nav links */
+.home-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
+}
+
+/* Nav item — dropdown anchor */
+.home-nav__item {
+  position: relative;
+}
+
+.home-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  padding: 6px 13px;
+  border-radius: var(--radius-full);
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.home-nav__link:hover {
+  color: #84cc16;
+  background: rgba(132, 204, 22, 0.13);
+  text-decoration: none;
+}
+
+/* Chevron arrow */
+.home-nav__chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid rgba(255, 255, 255, 0.5);
+  transition: transform 0.2s ease, border-top-color 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.home-nav__item:hover .home-nav__chevron {
+  transform: rotate(180deg);
+  border-top-color: #84cc16;
+}
+
+/* Dropdown panel */
+.home-nav__dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  min-width: 190px;
+  background: rgba(6, 20, 3, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(132, 204, 22, 0.16);
+  border-radius: var(--radius-lg);
+  padding: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(132, 204, 22, 0.06);
+  z-index: 300;
+}
+
+/* Small notch connecting panel to nav item */
+.home-nav__dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(132, 204, 22, 0.16);
+}
+
+.home-nav__item:hover .home-nav__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.home-nav__dropdown-item {
+  display: block;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: color 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+
+.home-nav__dropdown-item:hover {
+  color: #84cc16;
+  background: rgba(132, 204, 22, 0.12);
+  text-decoration: none;
+}
+
+/* Divider + login */
+.home-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.home-nav__divider {
+  color: rgba(255, 255, 255, 0.20);
+  font-size: 20px;
+  line-height: 1;
+  user-select: none;
+}
+
+.home-nav__login {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 7px 20px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.75), rgba(37, 99, 235, 0.85));
+  border: 1px solid rgba(96, 165, 250, 0.40);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.home-nav__login:hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: rgba(96, 165, 250, 0.7);
+  box-shadow: 0 4px 18px rgba(59, 130, 246, 0.38);
+  text-decoration: none;
+  color: #ffffff;
+}
+
+/* Navbar responsive */
+@media (max-width: 860px) {
+  .home-nav__links {
+    gap: 0;
+  }
+
+  .home-nav__link {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-nav__links {
+    display: none;
+  }
 }
 
 /* ── Hero ───────────────────────────────────────────────────────────────── */
@@ -32,7 +259,7 @@
 .home-hero {
   position: relative;
   text-align: center;
-  padding: 80px var(--spacing-xl) 64px;
+  padding: 56px var(--spacing-xl) 64px;
   overflow: hidden;
 }
 
@@ -183,10 +410,10 @@
   align-items: flex-start;
   padding: var(--spacing-xl);
   border-radius: 20px;
-  background: rgba(26, 46, 5, 0.55);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(5, 18, 2, 0.62);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(132, 204, 22, 0.30);
   transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
@@ -247,7 +474,7 @@
 
 /* ─ Icon bubble ─ */
 .feature-card__icon {
-  font-size: 28px;
+  font-size: 34px;
   line-height: 1;
   margin-bottom: var(--spacing-lg);
   display: flex;
@@ -282,7 +509,7 @@
 }
 
 .feature-card__name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--color-white);
   line-height: 1.4;
@@ -292,11 +519,11 @@
 /* ─ Status badge ─ */
 .feature-card__badge {
   flex-shrink: 0;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  padding: 3px 8px;
+  padding: 3px 10px;
   border-radius: var(--radius-full);
   white-space: nowrap;
 }
@@ -315,8 +542,8 @@
 
 /* ─ Description ─ */
 .feature-card__description {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.65;
   margin: 0;
 }

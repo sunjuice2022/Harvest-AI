@@ -1,4 +1,7 @@
-import "dotenv/config";
+import dotenv from "dotenv";
+import { resolve } from "path";
+// Load root .env (backend runs from backend/ dir, so step up two levels from tests/)
+dotenv.config({ path: resolve(__dirname, "../../.env") });
 import express from "express";
 import type { Express, Request, Response } from "express";
 import cors from "cors";
@@ -34,6 +37,11 @@ import { FarmRecommendationService } from "../src/services/farm-recommendation/f
 import { VoiceService } from "../src/services/voice/voice.service";
 import { PollyService, type PollyVoiceInfo } from "../src/services/voice/polly.service";
 import { VOICE_CONSTANTS } from "../src/constants/voice.constants";
+import { WeatherService } from "../src/services/weather/weather.service";
+import { WeatherBedrockService } from "../src/services/weather/weatherBedrock.service";
+import { WeatherNotificationService } from "../src/services/weather/weatherNotification.service";
+import type { WeatherAlert } from "@agrisense/shared";
+import { ALERT_THRESHOLDS } from "../src/constants/weather.constants";
 
 const USE_REAL_BEDROCK = process.env.USE_REAL_BEDROCK === "true";
 const awsRegion = process.env.AWS_REGION || "ap-southeast-2";
@@ -53,6 +61,33 @@ const voiceChatService = USE_REAL_BEDROCK
 const pollyService = USE_REAL_BEDROCK
   ? new PollyService({ region: awsRegion })
   : null;
+
+// Weather services — wired when USE_REAL_BEDROCK=true
+const weatherService = USE_REAL_BEDROCK
+  ? new WeatherService({
+      apiBaseUrl: process.env.WEATHER_API_BASE_URL ?? "https://api.openweathermap.org/data/3.0",
+      apiKey: process.env.WEATHER_API_KEY ?? "",
+      highTempThreshold: Number(process.env.WEATHER_HIGH_TEMP ?? "35"),
+      lowTempThreshold: Number(process.env.WEATHER_LOW_TEMP ?? "5"),
+      pollIntervalMinutes: Number(process.env.WEATHER_POLL_INTERVAL ?? "30"),
+    })
+  : null;
+
+const weatherBedrockService =
+  USE_REAL_BEDROCK && process.env.BEDROCK_MODEL_ID
+    ? new WeatherBedrockService({ modelId: process.env.BEDROCK_MODEL_ID, region: awsRegion })
+    : null;
+
+const weatherNotificationService =
+  USE_REAL_BEDROCK && process.env.SNS_ALERT_TOPIC_ARN
+    ? new WeatherNotificationService({
+        topicArn: process.env.SNS_ALERT_TOPIC_ARN,
+        ...(process.env.ALERT_PHONE_NUMBER ? { phoneNumber: process.env.ALERT_PHONE_NUMBER } : {}),
+      })
+    : null;
+
+// In-memory alert store keyed by userId (replaces DynamoDB in local dev)
+const inMemoryAlerts = new Map<string, WeatherAlert[]>();
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -391,6 +426,153 @@ app.post("/api/voice/speak", async (req: Request, res: Response) => {
     console.error("[Polly]", error);
     return res.status(500).json({ error: "Speech synthesis failed" });
   }
+});
+
+// GET /api/weather/forecast?lat=x&lng=y
+app.get("/api/weather/forecast", async (req: Request, res: Response) => {
+  const lat = parseFloat(req.query.lat as string) || -37.8136;
+  const lng = parseFloat(req.query.lng as string) || 144.9631;
+  const userId = res.locals.userId as string;
+
+  if (USE_REAL_BEDROCK && weatherService) {
+    try {
+      const rawForecast = await weatherService.fetchForecast({ lat, lng });
+      const forecast = weatherService.parseForecast(rawForecast);
+
+      // Evaluate thresholds and enrich with Bedrock, then store alerts in memory
+      const recommendations = weatherService.evaluateAlertConditions(rawForecast, {
+        highTempThreshold: ALERT_THRESHOLDS.HIGH_TEMP_CELSIUS,
+        lowTempThreshold: ALERT_THRESHOLDS.LOW_TEMP_CELSIUS,
+      });
+      const enriched = recommendations.length > 0 && weatherBedrockService
+        ? await weatherBedrockService.enrichRecommendations(recommendations, forecast)
+        : recommendations;
+
+      if (enriched.length > 0) {
+        const now = new Date().toISOString();
+        const newAlerts: WeatherAlert[] = enriched.map((a, i) => ({
+          alertId: `alert-${Date.now()}-${i}`,
+          userId,
+          type: a.type,
+          severity: a.severity,
+          message: a.message,
+          recommendation: a.recommendation,
+          acknowledged: false,
+          createdAt: now,
+        }));
+        inMemoryAlerts.set(userId, [...(inMemoryAlerts.get(userId) ?? []), ...newAlerts]);
+
+        // Send SNS notifications if configured
+        if (weatherNotificationService) {
+          weatherNotificationService.sendAlertNotifications(enriched).catch((err: Error) =>
+            console.warn("[SNS] Notification failed:", err.message)
+          );
+        }
+      }
+
+      const advisory = weatherBedrockService
+        ? await weatherBedrockService.generateDailyAdvisory(forecast, lat)
+        : undefined;
+
+      return res.json({ forecast, ...(advisory ? { advisory } : {}) });
+    } catch (err) {
+      console.error("[Weather] Real fetch failed, falling back to mock:", err);
+    }
+  }
+
+  // Mock fallback
+  const today = new Date();
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    return {
+      date: d.toISOString().split("T")[0],
+      tempHigh: 22 + Math.round(Math.random() * 8),
+      tempLow: 12 + Math.round(Math.random() * 5),
+      humidity: 55 + Math.round(Math.random() * 25),
+      windSpeed: 10 + Math.round(Math.random() * 15),
+      rainMm: Math.random() > 0.6 ? Math.round(Math.random() * 20) : 0,
+      condition: (["Sunny", "Partly cloudy", "Overcast", "Light rain"] as const)[Math.floor(Math.random() * 4)] ?? "Sunny",
+      icon: (["01d", "02d", "03d", "10d"] as const)[Math.floor(Math.random() * 4)] ?? "01d",
+    };
+  });
+  return res.json({
+    forecast: {
+      location: { lat, lng },
+      current: { temperature: 20, feelsLike: 19, humidity: 62, windSpeed: 14, condition: "Partly cloudy", icon: "02d" },
+      days,
+      fetchedAt: new Date().toISOString(),
+    },
+  });
+});
+
+// GET /api/weather/alerts
+app.get("/api/weather/alerts", (req: Request, res: Response) => {
+  const userId = res.locals.userId as string;
+  const stored = (inMemoryAlerts.get(userId) ?? []).filter((a) => !a.acknowledged);
+
+  // In mock mode, inject a demo alert so the UI section is visible
+  if (!USE_REAL_BEDROCK && stored.length === 0) {
+    const demo: WeatherAlert = {
+      alertId: "demo-alert-001",
+      userId,
+      type: "high_temp",
+      severity: "warning",
+      message: "High temperature alert: 37°C forecast in the next 3 days.",
+      recommendation:
+        "Increase irrigation frequency, apply shade nets to sensitive crops, and avoid working in the field during peak afternoon heat (12–3pm).",
+      acknowledged: false,
+      createdAt: new Date().toISOString(),
+    };
+    return res.json({ alerts: [demo] });
+  }
+
+  return res.json({ alerts: stored });
+});
+
+// PUT /api/weather/alerts/:alertId/acknowledge
+app.put("/api/weather/alerts/:alertId/acknowledge", (req: Request, res: Response) => {
+  const userId = res.locals.userId as string;
+  const { alertId } = req.params;
+  const userAlerts = inMemoryAlerts.get(userId) ?? [];
+  inMemoryAlerts.set(
+    userId,
+    userAlerts.map((a) => (a.alertId === alertId ? { ...a, acknowledged: true } : a))
+  );
+  return res.json({ alertId, acknowledged: true });
+});
+
+// POST /api/weather/subscribe
+app.post("/api/weather/subscribe", async (req: Request, res: Response) => {
+  const { email, phone } = req.body as { email?: string; phone?: string };
+
+  if (!email && !phone) {
+    return res.status(400).json({ error: "email or phone is required" });
+  }
+
+  if (USE_REAL_BEDROCK && weatherNotificationService) {
+    try {
+      let subscriptionArn = "";
+      let pendingConfirmation = false;
+      if (email) {
+        const result = await weatherNotificationService.subscribeEmail(email);
+        subscriptionArn = result.subscriptionArn;
+        pendingConfirmation = result.pendingConfirmation;
+      }
+      if (phone) {
+        const result = await weatherNotificationService.subscribePhone(phone);
+        subscriptionArn = result.subscriptionArn;
+      }
+      return res.json({ subscriptionArn, pendingConfirmation });
+    } catch (err) {
+      console.error("[SNS] Subscribe failed:", err);
+      return res.status(500).json({ error: "Subscription failed" });
+    }
+  }
+
+  // Mock mode — simulate successful subscription
+  console.log(`[Mock] Alert subscription: email=${email ?? "—"}, phone=${phone ?? "—"}`);
+  return res.json({ subscriptionArn: "arn:aws:sns:ap-southeast-2:mock:WeatherAlerts:mock-sub-001", pendingConfirmation: !!email });
 });
 
 // Health check

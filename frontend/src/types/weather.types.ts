@@ -5,6 +5,7 @@ export type { WeatherAlert, WeatherForecast, WeatherForecastDay, AlertType, Aler
 export interface UseWeatherDataResult {
   forecast: import('@agrisense/shared').WeatherForecast | null;
   alerts: import('@agrisense/shared').WeatherAlert[];
+  advisory: string | null;
   isLoading: boolean;
   error: string | null;
   refetch: () => void;

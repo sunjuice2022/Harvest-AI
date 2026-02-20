@@ -74,7 +74,9 @@
     grid-template-columns: 1fr 2fr;
     grid-template-areas:
       'alerts alerts'
-      'current forecast';
+      'current forecast'
+      'advisory advisory'
+      'subscribe subscribe';
     padding: var(--space-2xl);
   }
 
@@ -88,5 +90,13 @@
 
   .forecast {
     grid-area: forecast;
+  }
+
+  .advisory {
+    grid-area: advisory;
+  }
+
+  .subscribe {
+    grid-area: subscribe;
   }
 }
