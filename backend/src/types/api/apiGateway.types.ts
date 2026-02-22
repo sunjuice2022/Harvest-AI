@@ -18,10 +18,16 @@ export interface APIGatewayProxyResult {
   headers?: Record<string, string>;
 }
 
+const CORS_HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type,Authorization,x-user-id',
+};
+
 export function successResponse(data: unknown): APIGatewayProxyResult {
   return {
     statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: CORS_HEADERS,
     body: JSON.stringify(data),
   };
 }
@@ -29,7 +35,7 @@ export function successResponse(data: unknown): APIGatewayProxyResult {
 export function errorResponse(statusCode: number, message: string): APIGatewayProxyResult {
   return {
     statusCode,
-    headers: { 'Content-Type': 'application/json' },
+    headers: CORS_HEADERS,
     body: JSON.stringify({ error: message }),
   };
 }
