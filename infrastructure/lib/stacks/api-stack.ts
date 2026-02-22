@@ -53,7 +53,7 @@ export class ApiStack extends cdk.Stack {
       defaultCorsPreflightOptions: {
         allowOrigins: apigw.Cors.ALL_ORIGINS,
         allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: ['Content-Type', 'Authorization'],
+        allowHeaders: ['Content-Type', 'Authorization', 'x-user-id'],
       },
     });
 
