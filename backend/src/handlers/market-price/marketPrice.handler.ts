@@ -5,7 +5,7 @@
 import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
 import type { MarketInsightRequest, Commodity, MarketPricesResponse } from '@harvest-ai/shared';
 import { MarketPriceService } from '../../services/market-price/marketPrice.service';
-import { fetchWorldBankData, enrichCommodity, WB_COMMODITY_IDS } from '../../services/market-price/worldBank.service';
+import { fetchWorldBankData, enrichCommodity } from '../../services/market-price/worldBank.service';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,
   successResponse, errorResponse,
