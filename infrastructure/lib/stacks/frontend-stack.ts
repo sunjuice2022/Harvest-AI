@@ -6,9 +6,12 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as route53 from 'aws-cdk-lib/aws-route53';
+import * as targets from 'aws-cdk-lib/aws-route53-targets';
 
 // Wildcard ACM certificate (us-east-1, covers *.harvestai.au + harvestai.au)
-const CERT_ARN = 'arn:aws:acm:us-east-1:567282577973:certificate/78b83170-f9fa-41f8-8843-4671cae974e2';
+// Set to undefined to deploy without a custom domain (e.g. while cert is pending)
+const CERT_ARN: string | undefined = undefined;
 
 function domainNamesForStage(stage: string): string[] {
   if (stage === 'prod') return ['harvestai.au', 'www.harvestai.au'];
@@ -26,6 +29,7 @@ export class FrontendStack extends cdk.Stack {
 
     const bucket = this.createBucket(stage);
     const distribution = this.createDistribution(bucket, stage);
+    this.createDnsRecords(distribution, stage);
     this.createOutputs(bucket, distribution);
   }
 
@@ -43,13 +47,14 @@ export class FrontendStack extends cdk.Stack {
       originAccessControlName: `HarvestAI-${stage}-Frontend`,
     });
 
-    const certificate = acm.Certificate.fromCertificateArn(this, 'Certificate', CERT_ARN);
+    const certificate = CERT_ARN
+      ? acm.Certificate.fromCertificateArn(this, 'Certificate', CERT_ARN)
+      : undefined;
 
     return new cloudfront.Distribution(this, 'Distribution', {
       comment: `HarvestAI ${stage} frontend`,
       defaultRootObject: 'index.html',
-      domainNames: domainNamesForStage(stage),
-      certificate,
+      ...(certificate ? { domainNames: domainNamesForStage(stage), certificate } : {}),
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(bucket, {
           originAccessControl: oac,
@@ -61,6 +66,18 @@ export class FrontendStack extends cdk.Stack {
         { httpStatus: 403, responseHttpStatus: 200, responsePagePath: '/index.html' },
         { httpStatus: 404, responseHttpStatus: 200, responsePagePath: '/index.html' },
       ],
+    });
+  }
+
+  private createDnsRecords(distribution: cloudfront.Distribution, stage: string): void {
+    if (!CERT_ARN) return; // skip DNS alias records until cert is issued
+    const zone = route53.HostedZone.fromLookup(this, 'Zone', { domainName: 'harvestai.au' });
+    domainNamesForStage(stage).forEach((domain, i) => {
+      new route53.ARecord(this, `AliasRecord${i}`, {
+        zone,
+        recordName: domain,
+        target: route53.RecordTarget.fromAlias(new targets.CloudFrontTarget(distribution)),
+      });
     });
   }
 
