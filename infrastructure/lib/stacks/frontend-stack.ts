@@ -7,12 +7,12 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 
-// Wildcard ACM certificate (us-east-1, covers *.harvestai.com + harvestai.com)
-const CERT_ARN = 'arn:aws:acm:us-east-1:567282577973:certificate/3bf461c4-9ffa-4d7e-9322-7a1c3ce90aaf';
+// Wildcard ACM certificate (us-east-1, covers *.harvestai.au + harvestai.au)
+const CERT_ARN = 'arn:aws:acm:us-east-1:567282577973:certificate/78b83170-f9fa-41f8-8843-4671cae974e2';
 
 function domainNamesForStage(stage: string): string[] {
-  if (stage === 'prod') return ['harvestai.com', 'www.harvestai.com'];
-  return [`${stage}.harvestai.com`]; // dev → dev.harvestai.com, staging → staging.harvestai.com
+  if (stage === 'prod') return ['harvestai.au', 'www.harvestai.au'];
+  return [`${stage}.harvestai.au`]; // dev → dev.harvestai.au, staging → staging.harvestai.au
 }
 
 export interface FrontendStackProps extends cdk.StackProps {
