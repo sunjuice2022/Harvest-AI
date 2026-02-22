@@ -3,7 +3,7 @@
 import { GetForecastResponse, GetAlertsResponse, AcknowledgeAlertResponse } from '@harvest-ai/shared';
 import { WEATHER_API_ENDPOINTS } from '@harvest-ai/shared';
 
-const API_BASE_URL = (import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? '';
+const API_BASE_URL = ((import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? '').replace(/\/$/, '');
 
 export interface SubscribeRequest {
   email?: string;

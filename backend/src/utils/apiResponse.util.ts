@@ -4,7 +4,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 
 const CORS_HEADERS = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN ?? 'http://localhost:3000',
+  'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN ?? '*',
   'Access-Control-Allow-Credentials': 'true',
 };
 
