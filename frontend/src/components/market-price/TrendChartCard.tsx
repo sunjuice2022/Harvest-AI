@@ -4,7 +4,7 @@
 
 import React from "react";
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import type { Commodity } from "@agrisense/shared";
+import type { Commodity } from "@harvest-ai/shared";
 import { formatPrice } from "../../utils";
 import "./TrendChartCard.css";
 

@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import type { CommodityCategory } from "@agrisense/shared";
+import type { CommodityCategory } from "@harvest-ai/shared";
 import "./CategoryFilter.css";
 
 type FilterCategory = CommodityCategory | "all";

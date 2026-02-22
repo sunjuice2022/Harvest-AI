@@ -2,7 +2,7 @@ import type { DiagnosisResult } from "@harvest-ai/shared";
 
 export async function mockDiagnoseCrop(
   message: string,
-  imageBase64?: string
+  _imageBase64?: string
 ): Promise<DiagnosisResult> {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000));

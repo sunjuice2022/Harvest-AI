@@ -1,6 +1,6 @@
 /** Agent-specific types for the Weather Agent. */
 
-import { AlertType, AlertSeverity } from '@agrisense/shared';
+import { AlertType, AlertSeverity } from '@harvest-ai/shared';
 
 export interface WeatherAgentToolInput {
   userId: string;

@@ -161,19 +161,19 @@ User Sends Message with Image URL
 
 ## Import Paths
 
-### Frontend (@agrisense/frontend)
+### Frontend (@harvest-ai/frontend)
 ```typescript
 import { useDiagnosis } from "@/hooks/useDiagnosis";
 import { ChatBubble } from "@/components/diagnosis/ChatBubble";
-import type { DiagnosisResult, ChatSession } from "@agrisense/shared";
+import type { DiagnosisResult, ChatSession } from "@harvest-ai/shared";
 ```
 
-### Backend (@agrisense/backend)
+### Backend (@harvest-ai/backend)
 ```typescript
 import { DiagnosisService } from "@/services/diagnosis/diagnosis.service";
 import { ChatSessionRepository } from "@/repositories/diagnosis/chatSession.repository";
 import { DIAGNOSIS_CONSTANTS } from "@/constants/diagnosis.constants";
-import type { DiagnosisResult } from "@agrisense/shared";
+import type { DiagnosisResult } from "@harvest-ai/shared";
 ```
 
 ---

@@ -1,8 +1,8 @@
-# AgriSense AI — Design Guide
+# Harvest AI — Design Guide
 
 ## 1. Design Philosophy
 
-The AgriSense AI interface follows a **bold agritech editorial** design language. Full-bleed nature photography anchors each view, while glassmorphism cards float above the scene. Headlines are set in a heavy serif/display typeface for authority and warmth; body copy uses a clean sans-serif for legibility. Every screen communicates that powerful AI lives inside a deeply human, land-connected product.
+The Harvest AI interface follows a **bold agritech editorial** design language. Full-bleed nature photography anchors each view, while glassmorphism cards float above the scene. Headlines are set in a heavy serif/display typeface for authority and warmth; body copy uses a clean sans-serif for legibility. Every screen communicates that powerful AI lives inside a deeply human, land-connected product.
 
 **Core Principles:**
 
@@ -177,7 +177,7 @@ Full-bleed agricultural photography with a dark gradient scrim and bold serif he
 
 **Desktop:**
 - Fixed top bar, `rgba(13,31,10,0.85)` background + `backdrop-filter: blur(16px)`
-- Logo: AgriSense wordmark + leaf icon, Lime Green
+- Logo: Harvest AI wordmark + leaf icon, Lime Green
 - Nav links: Inter 14px Medium, White at 80% opacity; active = Lime Green
 - CTA: Lime Green pill button, right-aligned
 
@@ -324,7 +324,7 @@ Threshold-based alert notifications with severity-coded borders.
 
 ```
 ┌─────────────────────────────────────┐
-│  AgriSense AI              [···]    │
+│  Harvest AI              [···]    │
 ├─────────────────────────────────────┤
 │  [Bot bubble — Dark Glass, left]    │
 │                                     │
@@ -544,4 +544,4 @@ Threshold-based alert notifications with severity-coded borders.
 
 ---
 
-*This design guide is the source of truth for all UI/UX decisions across the AgriSense AI platform. When in doubt, favour bold typography, nature photography, and lime green energy.*
+*This design guide is the source of truth for all UI/UX decisions across the Harvest AI platform. When in doubt, favour bold typography, nature photography, and lime green energy.*

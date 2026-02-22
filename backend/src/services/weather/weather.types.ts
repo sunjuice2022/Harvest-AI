@@ -2,7 +2,7 @@
  * Backend domain models for the Weather feature.
  */
 
-import { AlertSeverity, AlertType } from '@agrisense/shared';
+import { AlertSeverity, AlertType } from '@harvest-ai/shared';
 
 export interface WeatherConfig {
   apiBaseUrl: string;

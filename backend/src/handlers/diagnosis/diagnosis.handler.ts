@@ -2,7 +2,7 @@
 
 import { ChatSessionRepository } from '../../repositories/diagnosis/chatSession.repository';
 import { DiagnosisService } from '../../services/diagnosis/diagnosis.service';
-import type { ChatSession, ChatMessage, DiagnosisRequest, DiagnosisResponse, DiagnosisResult } from '@agrisense/shared';
+import type { ChatSession, ChatMessage, DiagnosisRequest, DiagnosisResponse, DiagnosisResult } from '@harvest-ai/shared';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,
   successResponse, errorResponse, extractUserId,

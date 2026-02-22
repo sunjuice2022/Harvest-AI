@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import type { ChatMessage, DiagnosisResult } from "@agrisense/shared";
+import type { ChatMessage, DiagnosisResult } from "@harvest-ai/shared";
 import "./ChatBubble.css";
 
 interface ChatBubbleProps {

@@ -1,6 +1,6 @@
 /** Business logic for the Weather domain — forecast fetching and alert threshold evaluation. */
 
-import { WeatherForecast, WeatherForecastDay, GeoLocation } from '@agrisense/shared';
+import { WeatherForecast, WeatherForecastDay, GeoLocation } from '@harvest-ai/shared';
 import { OpenWeatherOneCallResponse } from './weather.dto.js';
 import { WeatherConfig } from './weather.types.js';
 import { AlertRecommendation } from '../../agents/weather/weather.types.js';

@@ -3,7 +3,7 @@
  * Contains external API contracts (OpenWeather) and service-specific inputs.
  */
 
-import { GeoLocation } from '@agrisense/shared';
+import { GeoLocation } from '@harvest-ai/shared';
 
 export interface OpenWeatherCondition {
   description: string;

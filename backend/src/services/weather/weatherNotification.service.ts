@@ -59,7 +59,7 @@ export class WeatherNotificationService {
   }
 
   private async publishAlert(alert: AlertRecommendation): Promise<void> {
-    const subject = `[AgriSense] ${alert.severity.toUpperCase()} Weather Alert`;
+    const subject = `[Harvest AI] ${alert.severity.toUpperCase()} Weather Alert`;
     const message = `${alert.message}\n\nRecommendation: ${alert.recommendation}`;
 
     await this.client.send(new PublishCommand({
@@ -71,7 +71,7 @@ export class WeatherNotificationService {
     if (this.config.phoneNumber) {
       await this.client.send(new PublishCommand({
         PhoneNumber: this.config.phoneNumber,
-        Message: `[AgriSense] ${alert.message}`,
+        Message: `[Harvest AI] ${alert.message}`,
       }));
     }
   }

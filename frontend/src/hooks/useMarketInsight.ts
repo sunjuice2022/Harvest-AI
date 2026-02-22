@@ -3,7 +3,7 @@
  */
 
 import { useState } from "react";
-import type { Commodity, MarketInsightResponse } from "@agrisense/shared";
+import type { Commodity, MarketInsightResponse } from "@harvest-ai/shared";
 import { getCurrentLanguage } from "./useLanguage";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";

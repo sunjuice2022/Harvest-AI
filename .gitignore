@@ -48,6 +48,15 @@ Thumbs.db
 # CDK
 .cdk.staging/
 cdk.out/
+infrastructure/cdk.context.json
+
+# Backup files
+*.bak
+
+# Images accidentally dropped at root
+*.jpeg
+*.jpg
+*.png
 
 # Python
 venv/

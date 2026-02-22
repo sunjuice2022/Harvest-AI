@@ -82,7 +82,7 @@ Create [backend/src/mocks/bedrock.mock.ts](backend/src/mocks/bedrock.mock.ts):
  * Mock Bedrock responses for testing without AWS account
  */
 
-import type { DiagnosisResult } from "@agrisense/shared";
+import type { DiagnosisResult } from "@harvest-ai/shared";
 
 export const MOCK_BEDROCK_RESPONSES = {
   tomato_leaf_disease: {
@@ -139,7 +139,7 @@ Create [frontend/src/components/diagnosis/__tests__/ChatBubble.test.tsx](fronten
 ```typescript
 import { render, screen } from "@testing-library/react";
 import { ChatBubble } from "../ChatBubble";
-import type { ChatMessage } from "@agrisense/shared";
+import type { ChatMessage } from "@harvest-ai/shared";
 
 describe("ChatBubble", () => {
   it("renders user message in green bubble", () => {
@@ -296,7 +296,7 @@ Create [backend/src/repositories/diagnosis/__tests__/chatSession.repository.test
 
 ```typescript
 import { ChatSessionRepository } from "../chatSession.repository";
-import type { ChatSession } from "@agrisense/shared";
+import type { ChatSession } from "@harvest-ai/shared";
 
 // Mock DynamoDB
 jest.mock("@aws-sdk/lib-dynamodb");
@@ -392,7 +392,7 @@ module.exports = {
   testMatch: ["**/__tests__/**/*.test.ts"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
-    "^@agrisense/shared$": "<rootDir>/../shared/src",
+    "^@harvest-ai/shared$": "<rootDir>/../shared/src",
   },
   collectCoverageFrom: [
     "src/**/*.ts",
@@ -475,7 +475,7 @@ Create [backend/src/__tests__/diagnosis.integration.test.ts](backend/src/__tests
 ```typescript
 import { DiagnosisService } from "../services/diagnosis/diagnosis.service";
 import { ChatSessionRepository } from "../repositories/diagnosis/chatSession.repository";
-import type { ChatSession } from "@agrisense/shared";
+import type { ChatSession } from "@harvest-ai/shared";
 import { randomUUID } from "crypto";
 
 /**

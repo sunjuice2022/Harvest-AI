@@ -7,7 +7,7 @@ import React from "react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import type { Commodity, MarketInsightResponse } from "@agrisense/shared";
+import type { Commodity, MarketInsightResponse } from "@harvest-ai/shared";
 import { formatPrice } from "../../utils";
 import "./ProductDetailPanel.css";
 

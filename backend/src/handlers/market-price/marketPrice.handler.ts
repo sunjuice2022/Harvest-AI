@@ -3,7 +3,7 @@
  */
 
 import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
-import type { MarketInsightRequest } from '@agrisense/shared';
+import type { MarketInsightRequest } from '@harvest-ai/shared';
 import { MarketPriceService } from '../../services/market-price/marketPrice.service';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,

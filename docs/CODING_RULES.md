@@ -1,6 +1,6 @@
-# AgriSense AI — Coding Rules & Conventions
+# Harvest AI — Coding Rules & Conventions
 
-> This document defines strict coding rules for the AgriSense AI project.
+> This document defines strict coding rules for the Harvest AI project.
 > All contributors (human and AI) must follow these rules.
 > AI coding tools (Claude, Copilot, Cursor, etc.) should reference this file before generating code.
 
@@ -48,7 +48,7 @@
 ## 2. Project Structure
 
 ```
-agrisense-ai/
+harvest-ai/
 ├── docs/                          # Documentation (PRD, design guide, this file)
 ├── infrastructure/                # AWS CDK / IaC
 │   ├── lib/
@@ -531,4 +531,4 @@ When generating code for this project:
 
 ---
 
-*This is the single source of truth for code quality in the AgriSense AI project. No exceptions.*
+*This is the single source of truth for code quality in the Harvest AI project. No exceptions.*

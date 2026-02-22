@@ -4,7 +4,7 @@
  */
 
 import { ChatSessionRepository } from '../../repositories/diagnosis/chatSession.repository';
-import type { ChatSession } from '@agrisense/shared';
+import type { ChatSession } from '@harvest-ai/shared';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,
   successResponse, errorResponse, extractUserId,

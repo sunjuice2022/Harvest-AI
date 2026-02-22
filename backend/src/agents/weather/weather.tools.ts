@@ -1,6 +1,6 @@
 /** Tool definitions for the Weather Agent — functions the agent can invoke. */
 
-import { WeatherForecast } from '@agrisense/shared';
+import { WeatherForecast } from '@harvest-ai/shared';
 import { WeatherService } from '../../services/weather/weather.service.js';
 import { WeatherAlertRepository } from '../../repositories/weather/weatherAlert.repository.js';
 import { WeatherNotificationService } from '../../services/weather/weatherNotification.service.js';

@@ -2,7 +2,7 @@
  * Internal types for Farm Planning Advisor — not exposed to frontend
  */
 
-import type { CropRecommendation, LivestockRecommendation } from "@agrisense/shared";
+import type { CropRecommendation, LivestockRecommendation } from "@harvest-ai/shared";
 
 export interface BedrockFarmResponse {
   cropRecommendations: CropRecommendation[];

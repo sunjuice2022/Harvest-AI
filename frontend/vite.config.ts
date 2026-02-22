@@ -1,4 +1,4 @@
-/** Vite configuration for the AgriSense AI frontend. */
+/** Vite configuration for the Harvest AI frontend. */
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -12,7 +12,7 @@ export default defineConfig({
       '@components': resolve(__dirname, './src/components'),
       '@hooks': resolve(__dirname, './src/hooks'),
       '@pages': resolve(__dirname, './src/pages'),
-      '@agrisense/shared': resolve(__dirname, '../shared/src'),
+      '@harvest-ai/shared': resolve(__dirname, '../shared/src'),
     },
   },
   server: {

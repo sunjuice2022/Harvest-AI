@@ -187,7 +187,7 @@ npm run dev -w frontend
 REACT_APP_API_URL=http://localhost:3000/api
 AWS_REGION=us-east-1
 CHAT_SESSIONS_TABLE=ChatSessions
-MEDIA_BUCKET=agrisense-media
+MEDIA_BUCKET=harvest-ai-media
 ```
 
 ### First Test
@@ -425,4 +425,4 @@ Refer to [docs/CODING_RULES.md](docs/CODING_RULES.md) for style guide.
 **Build Status:** ✅ Complete  
 **Ready for:** Phase 0 Infrastructure → Phase 1 Testing → Production
 
-🌾 **Welcome to AgriSense AI!** 🌾
+🌾 **Welcome to Harvest AI!** 🌾

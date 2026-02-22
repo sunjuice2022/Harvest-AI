@@ -7,7 +7,7 @@ const config: Config = {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   moduleNameMapper: {
-    '^@agrisense/shared$': '<rootDir>/../shared/index.ts',
+    '^@harvest-ai/shared$': '<rootDir>/../shared/index.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   coverageThreshold: {

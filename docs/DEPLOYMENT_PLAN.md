@@ -1,6 +1,6 @@
 # Deployment Plan
 
-## AgriSense AI — Infrastructure, CI/CD & Deployment
+## Harvest AI — Infrastructure, CI/CD & Deployment
 
 | Field            | Detail                              |
 | ---------------- | ----------------------------------- |
@@ -74,9 +74,9 @@ CDK_REGION=ap-southeast-2
 ```
 
 Each CDK stack reads the stage from context and names resources accordingly:
-- Dev: `AgriSense-Dev-WeatherStack`
-- Staging: `AgriSense-Staging-WeatherStack`
-- Prod: `AgriSense-Prod-WeatherStack`
+- Dev: `HarvestAI-Dev-WeatherStack`
+- Staging: `HarvestAI-Staging-WeatherStack`
+- Prod: `HarvestAI-Prod-WeatherStack`
 
 ---
 
@@ -93,7 +93,7 @@ Each CDK stack reads the stage from context and names resources accordingly:
 | State Management | CloudFormation (managed by AWS) | Terraform state file (you manage) |
 | Best For | AWS-only projects | Multi-cloud projects |
 
-**Decision:** CDK is the right choice since AgriSense AI is 100% AWS.
+**Decision:** CDK is the right choice since Harvest AI is 100% AWS.
 
 ### 3.2 CDK Stack Architecture
 
@@ -129,9 +129,9 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION ?? "ap-southeast-2",
 };
 
-new AuthStack(app, `AgriSense-${stage}-Auth`, { env, stage });
-new ApiStack(app, `AgriSense-${stage}-Api`, { env, stage });
-new WeatherStack(app, `AgriSense-${stage}-Weather`, { env, stage });
+new AuthStack(app, `HarvestAI-${stage}-Auth`, { env, stage });
+new ApiStack(app, `HarvestAI-${stage}-Api`, { env, stage });
+new WeatherStack(app, `HarvestAI-${stage}-Weather`, { env, stage });
 // ... etc
 ```
 
@@ -430,7 +430,7 @@ jobs:
 
 | Secret | Value | Used By |
 |--------|-------|---------|
-| `AWS_DEPLOY_ROLE_ARN` | `arn:aws:iam::role/AgriSense-GitHubDeploy` | CDK deploy |
+| `AWS_DEPLOY_ROLE_ARN` | `arn:aws:iam::role/HarvestAI-GitHubDeploy` | CDK deploy |
 | `WEATHER_API_KEY` | OpenWeather API key | CDK deploys as Lambda env var |
 
 #### Environments (Settings → Environments)
@@ -483,7 +483,7 @@ applications:
 
 | Branch | Amplify Environment | URL |
 |--------|-------------------|-----|
-| `main` | Production | `https://agrisense.ai` or `https://main.d1xxxxx.amplifyapp.com` |
+| `main` | Production | `https://harvest-ai.com` or `https://main.d1xxxxx.amplifyapp.com` |
 | `dev` | Preview | `https://dev.d1xxxxx.amplifyapp.com` |
 | PR branches | PR Preview | `https://pr-{number}.d1xxxxx.amplifyapp.com` |
 
@@ -493,7 +493,7 @@ Set in Amplify Console → App settings → Environment variables:
 
 | Variable | Dev | Production |
 |----------|-----|------------|
-| `VITE_API_BASE_URL` | `https://dev-api.agrisense.ai` | `https://api.agrisense.ai` |
+| `VITE_API_BASE_URL` | `https://dev-api.harvest-ai.com` | `https://api.harvest-ai.com` |
 | `VITE_COGNITO_USER_POOL_ID` | Dev pool ID | Prod pool ID |
 | `VITE_COGNITO_CLIENT_ID` | Dev client ID | Prod client ID |
 | `VITE_WEBSOCKET_URL` | Dev WebSocket URL | Prod WebSocket URL |
@@ -571,7 +571,7 @@ cd infrastructure
 cdk deploy --all --context stage=dev
 
 # Run a single stack
-cdk deploy AgriSense-Dev-Weather --context stage=dev
+cdk deploy HarvestAI-Dev-Weather --context stage=dev
 
 # Diff before deploying
 cdk diff --context stage=dev
@@ -659,7 +659,7 @@ git push origin main
 # CDK deploy will auto-rollback if any stack update fails
 
 # Option 3: Manual rollback to previous CloudFormation stack version
-aws cloudformation rollback-stack --stack-name AgriSense-Prod-Weather
+aws cloudformation rollback-stack --stack-name HarvestAI-Prod-Weather
 ```
 
 ### 8.2 Frontend Rollback (Amplify)
@@ -677,7 +677,7 @@ git push origin main
 ```bash
 # Lambda aliases + versions allow instant rollback
 aws lambda update-alias \
-  --function-name AgriSense-Prod-WeatherPolling \
+  --function-name HarvestAI-Prod-WeatherPolling \
   --name live \
   --function-version {previous-version}
 ```
@@ -717,10 +717,10 @@ Deployed via `monitoring-stack.ts`:
 - name: Smoke Test
   run: |
     # Check API health
-    curl -sf https://api.agrisense.ai/health || exit 1
+    curl -sf https://api.harvest-ai.com/health || exit 1
 
     # Check frontend
-    curl -sf https://agrisense.ai || exit 1
+    curl -sf https://harvest-ai.com || exit 1
 
     echo "Smoke tests passed"
 ```
@@ -781,7 +781,7 @@ Complete in order:
 
 ### One-Time AWS Setup
 - [ ] Create IAM OIDC provider for GitHub Actions
-- [ ] Create `AgriSense-GitHubDeploy` IAM role with trust policy
+- [ ] Create `HarvestAI-GitHubDeploy` IAM role with trust policy
 - [ ] Attach required permissions to deploy role
 - [ ] Bootstrap CDK in AWS account (`cdk bootstrap aws://ACCOUNT/REGION`)
 - [ ] Set up Amplify app and connect to GitHub repo

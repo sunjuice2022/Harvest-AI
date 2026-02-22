@@ -7,7 +7,7 @@ The frontend is working, but backend API calls will fail because:
 ```
 ❌ Lambda functions not deployed
 ❌ DynamoDB table (ChatSessions) doesn't exist
-❌ S3 bucket (agrisense-media) not created
+❌ S3 bucket (harvest-ai-media) not created
 ❌ Bedrock Claude not accessible
 ❌ API Gateway not configured
 ❌ Cognito User Pool not set up
@@ -155,7 +155,7 @@ export class DiagnosisStack extends cdk.Stack {
 
     // S3 Bucket for Media Uploads
     const mediaBucket = new s3.Bucket(this, "MediaBucket", {
-      bucketName: `agrisense-media-${cdk.Stack.of(this).account}`,
+      bucketName: `harvest-ai-media-${cdk.Stack.of(this).account}`,
       versioned: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY, // Dev only!
       cors: [
@@ -314,7 +314,7 @@ Do you wish to deploy these changes (y/n)? y
 
 **This will:**
 - ✅ Create DynamoDB table (ChatSessions)
-- ✅ Create S3 bucket (agrisense-media)
+- ✅ Create S3 bucket (harvest-ai-media)
 - ✅ Create IAM role with Bedrock + DynamoDB + S3 permissions
 - ⏱️ Takes ~5-10 minutes
 
@@ -323,7 +323,7 @@ After deployment, you'll see:
 ✓ DiagnosisStack
 Outputs:
 DiagnosisStack.ChatSessionsTableName = ChatSessions
-DiagnosisStack.MediaBucketName = agrisense-media-123456789012
+DiagnosisStack.MediaBucketName = harvest-ai-media-123456789012
 ```
 
 ---
@@ -343,7 +343,7 @@ aws lambda create-function \
   --role arn:aws:iam::ACCOUNT_ID:role/DiagnosisStack-LambdaExecutionRoleXXXX-XXXXX \
   --handler dist/handlers/diagnosis/diagnosis.handler.diagnosisChat \
   --zip-file fileb://backend/dist.zip \
-  --environment Variables="{CHAT_SESSIONS_TABLE=ChatSessions,MEDIA_BUCKET=agrisense-media-ACCOUNT_ID,AWS_REGION=us-east-1}"
+  --environment Variables="{CHAT_SESSIONS_TABLE=ChatSessions,MEDIA_BUCKET=harvest-ai-media-ACCOUNT_ID,AWS_REGION=us-east-1}"
 ```
 
 Or use AWS Lambda Console to upload manually (easier for now).
@@ -356,7 +356,7 @@ Or use AWS Lambda Console to upload manually (easier for now).
 
 1. **AWS Console** → API Gateway → Create API
 2. **REST API** → Build
-3. **API Name:** `agrisense-diagnosis-api`
+3. **API Name:** `harvest-ai-diagnosis-api`
 4. **Description:** Crop Diagnosis API
 
 ### Add Route: POST /api/diagnosis/chat
@@ -417,7 +417,7 @@ aws dynamodb get-item \
 
 ```bash
 aws s3api generate-presigned-url put-object \
-  --bucket agrisense-media-ACCOUNT_ID \
+  --bucket harvest-ai-media-ACCOUNT_ID \
   --key "test/image.jpg" \
   --expires-in 600
 ```
@@ -444,7 +444,7 @@ For now, you can test without auth. To add Cognito:
 ### Create User Pool
 
 1. **AWS Console** → Cognito → User pools → Create
-2. **User pool name:** `agrisense-users`
+2. **User pool name:** `harvest-ai-users`
 3. **Sign-in options:** Email
 4. **Next**
 5. **Configure sign-up:**
@@ -486,7 +486,7 @@ VITE_COGNITO_REGION=us-east-1
 ```bash
 AWS_REGION=us-east-1
 CHAT_SESSIONS_TABLE=ChatSessions
-MEDIA_BUCKET=agrisense-media-ACCOUNT_ID
+MEDIA_BUCKET=harvest-ai-media-ACCOUNT_ID
 ```
 
 ### Frontend (.env)
@@ -509,7 +509,7 @@ If you don't want to set up AWS yet, use mocks:
 Create [backend/src/services/diagnosis/bedrock.mock.ts](backend/src/services/diagnosis/bedrock.mock.ts):
 
 ```typescript
-import type { DiagnosisResult } from "@agrisense/shared";
+import type { DiagnosisResult } from "@harvest-ai/shared";
 
 export async function mockDiagnoseCrop(message: string): Promise<DiagnosisResult> {
   // Simulate delay

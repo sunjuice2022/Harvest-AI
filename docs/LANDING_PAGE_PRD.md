@@ -1,6 +1,6 @@
 # Landing Page PRD
 
-## AgriSense AI — Public Landing Page
+## Harvest AI — Public Landing Page
 
 | Field            | Detail                              |
 | ---------------- | ----------------------------------- |
@@ -16,7 +16,7 @@
 
 ## 1. Purpose
 
-The landing page is the public-facing entry point for AgriSense AI. Its goal is to clearly communicate the platform's value to farmers, build trust, and convert visitors into registered users.
+The landing page is the public-facing entry point for Harvest AI. Its goal is to clearly communicate the platform's value to farmers, build trust, and convert visitors into registered users.
 
 This page is accessible without authentication and serves as the first impression of the product.
 
@@ -37,7 +37,7 @@ This page is accessible without authentication and serves as the first impressio
 
 ### 3.1 Hero Section
 
-**Purpose:** Immediately communicate what AgriSense AI is and why it matters.
+**Purpose:** Immediately communicate what Harvest AI is and why it matters.
 
 **Layout:** Full-viewport hero with nature photography background (golden-hour farmland), dark gradient overlay, and centered content.
 
@@ -121,7 +121,7 @@ This page is accessible without authentication and serves as the first impressio
 - Eyebrow: `Body Small`, `Leaf Green` — "TECHNOLOGY"
 - Title: `Heading 1` — "Autonomous AI Agents Working for You"
 - Body paragraphs:
-  - "AgriSense AI uses autonomous agents that monitor, analyze, and act on your behalf — 24/7, without you lifting a finger."
+  - "Harvest AI uses autonomous agents that monitor, analyze, and act on your behalf — 24/7, without you lifting a finger."
   - "Built on Amazon Bedrock and AWS serverless infrastructure for reliability, security, and scale."
 
 **Agent Cards (inline, horizontal scroll on mobile):**
@@ -207,7 +207,7 @@ This page is accessible without authentication and serves as the first impressio
 **Footer Design:**
 - Background: `Near Black` (#1C1917)
 - Text: `Medium Gray`, links turn White on hover
-- Logo: AgriSense AI logo + tagline in `Body Small`
+- Logo: Harvest AI logo + tagline in `Body Small`
 - Bottom bar: Copyright + social media icon links
 - Border top: 1px solid `rgba(255, 255, 255, 0.1)`
 
@@ -244,13 +244,13 @@ All animations respect `prefers-reduced-motion` — disabled entirely when user 
 
 | Tag | Value |
 |-----|-------|
-| `<title>` | "AgriSense AI — Smart Farming Powered by AI" |
+| `<title>` | "Harvest AI — Smart Farming Powered by AI" |
 | `<meta description>` | "Get real-time weather alerts, instant AI crop diagnosis, curated agricultural news, and a farming community marketplace. Built on AWS." |
 | `<meta keywords>` | "agriculture AI, smart farming, crop diagnosis, weather alerts, farming community, agri marketplace, Amazon Bedrock" |
-| Open Graph title | "AgriSense AI — Smart Farming Powered by AI" |
+| Open Graph title | "Harvest AI — Smart Farming Powered by AI" |
 | Open Graph description | "AI-powered platform for weather alerts, crop diagnosis, agri news, and community marketplace." |
 | Open Graph image | Hero section screenshot or branded social card (1200x630) |
-| Canonical URL | `https://agrisense.ai` |
+| Canonical URL | `https://harvest-ai.com` |
 
 ---
 

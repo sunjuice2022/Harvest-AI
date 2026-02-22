@@ -1,7 +1,7 @@
 /** Bedrock service for the Weather Agent — calls Claude to generate AI-powered recommendations. */
 
 import { BedrockRuntimeClient, ConverseCommand } from '@aws-sdk/client-bedrock-runtime';
-import { WeatherForecast } from '@agrisense/shared';
+import { WeatherForecast } from '@harvest-ai/shared';
 import { AlertRecommendation } from '../../agents/weather/weather.types.js';
 import { WEATHER_AGENT_SYSTEM_PROMPT } from '../../agents/weather/weather.prompts.js';
 

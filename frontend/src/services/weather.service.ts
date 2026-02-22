@@ -1,7 +1,7 @@
 /** API client for the Weather domain — all HTTP calls to the backend weather endpoints. */
 
-import { GetForecastResponse, GetAlertsResponse, AcknowledgeAlertResponse } from '@agrisense/shared';
-import { WEATHER_API_ENDPOINTS } from '@agrisense/shared';
+import { GetForecastResponse, GetAlertsResponse, AcknowledgeAlertResponse } from '@harvest-ai/shared';
+import { WEATHER_API_ENDPOINTS } from '@harvest-ai/shared';
 
 const API_BASE_URL = (import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? '';
 

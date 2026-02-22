@@ -11,11 +11,42 @@
   min-height: 100dvh;
 }
 
+/* ── Page header ── */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(132, 204, 22, 0.12);
+}
+
+.backLink {
+  font-size: 13px;
+  color: rgba(163, 190, 140, 0.8);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.backLink:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.pageTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0;
+}
+
 /* ── Location bar ── */
 .locationBar {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-md);
   flex-wrap: wrap;
 }
 
@@ -25,30 +56,44 @@
   color: var(--color-medium-gray);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-right: var(--space-xs);
+  white-space: nowrap;
 }
 
-.locationPill {
-  padding: 6px 14px;
+.locationSelect {
+  padding: 7px 32px 7px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(132, 204, 22, 0.25);
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-medium-gray);
+  color: var(--color-white);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2384cc16' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.15s;
+  min-width: 180px;
 }
 
-.locationPill:hover {
-  background: rgba(255, 255, 255, 0.1);
+.locationSelect:hover,
+.locationSelect:focus {
+  border-color: var(--color-primary);
+}
+
+.locationSelect option,
+.locationSelect optgroup {
+  background: #0f2006;
   color: var(--color-white);
 }
 
-.locationPillActive {
-  background: rgba(132, 204, 22, 0.15);
-  border-color: var(--color-primary);
+.locationDisplay {
+  font-size: 13px;
+  font-weight: 600;
   color: var(--color-primary);
+  white-space: nowrap;
 }
 
 /* ── Two-column layout ── */
@@ -215,11 +260,35 @@
   margin-bottom: var(--space-lg);
 }
 
+.weatherOutlook {
+  background: rgba(132, 204, 22, 0.06);
+  border: 1px solid rgba(132, 204, 22, 0.18);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.weatherOutlookLabel {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-xs);
+}
+
+.weatherOutlookText {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.75;
+  margin: 0;
+}
+
 .advisoryText {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.75;
-  margin: 0 0 var(--space-xl);
+  margin: 0 0 var(--space-lg);
 }
 
 .advisoryActions {

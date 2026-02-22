@@ -235,7 +235,7 @@ REACT_APP_API_URL=http://localhost:3000/api
 ```
 AWS_REGION=us-east-1
 CHAT_SESSIONS_TABLE=ChatSessions
-MEDIA_BUCKET=agrisense-ai-media
+MEDIA_BUCKET=harvest-ai-media
 ```
 
 ---
@@ -329,4 +329,38 @@ All code follows the **Coding Rules** in `docs/CODING_RULES.md`:
 
 ---
 
-**Built with ❤️ | Last Updated: February 17, 2026**
+---
+
+## ✅ Additional Features Implemented (Post-MVP)
+
+### Weather Intelligence Agent
+
+| Feature | Status |
+|---------|--------|
+| Location picker — 35 Australian cities (all states/territories, grouped by state) | ✅ |
+| Back-link navigation (`← Home`) matching other agent pages | ✅ |
+| 7-day weather outlook block in advisory card (rain, frost, heat, humidity, wind, irrigation) | ✅ |
+| "Acknowledge" advisory action (dismisses repeated alert) | ✅ |
+| "Adjust Schedule" → links to `/farm-recommendation` | ✅ |
+
+### Authentication UI
+
+| Feature | Status |
+|---------|--------|
+| Sign-in page (`/login`) with email + password validation | ✅ |
+| Sign-up page (`/signup`) with name, email, password, confirm-password validation | ✅ |
+| Auth-aware navbar on Home page | ✅ |
+| `useAuth` hook with `localStorage` session persistence | ✅ |
+| AWS Cognito integration | ⏳ Future |
+
+### Codebase Hygiene
+
+| Item | Status |
+|------|--------|
+| All "agrisense" / "AgriSense" references removed from source files | ✅ |
+| ESLint migrated to v9 flat config (`eslint.config.mjs`) | ✅ |
+| Shared package rebuilt to remove stale dist artifacts | ✅ |
+
+---
+
+**Built with ❤️ | Last Updated: February 21, 2026**

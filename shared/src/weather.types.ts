@@ -64,3 +64,19 @@ export interface AcknowledgeAlertResponse {
   alertId: string;
   acknowledged: boolean;
 }
+
+export interface SubscribeNotificationRequest {
+  email?: string;
+  phone?: string;
+  userId: string;
+}
+
+export interface WeatherSubscriptionResult {
+  subscriptionArn: string;
+  pendingConfirmation: boolean;
+}
+
+export interface SubscribeNotificationResponse {
+  email?: WeatherSubscriptionResult;
+  phone?: WeatherSubscriptionResult;
+}

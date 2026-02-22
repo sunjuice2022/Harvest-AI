@@ -12,7 +12,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@agrisense/shared": ["../shared/src"],
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@pages/*": ["./src/pages/*"]

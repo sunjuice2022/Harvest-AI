@@ -5,7 +5,7 @@ import { WeatherService } from '../../services/weather/weather.service.js';
 import { WeatherBedrockService } from '../../services/weather/weatherBedrock.service.js';
 import { formatApiResponse, formatApiError, ValidationError } from '../../utils/apiResponse.util.js';
 import { requireEnv, optionalEnv } from '../../utils/env.util.js';
-import { GetForecastResponse } from '@agrisense/shared';
+import { GetForecastResponse } from '@harvest-ai/shared';
 
 const weatherService = new WeatherService({
   apiBaseUrl: requireEnv('WEATHER_API_BASE_URL'),

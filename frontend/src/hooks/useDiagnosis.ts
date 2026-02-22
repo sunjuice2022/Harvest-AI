@@ -3,7 +3,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import type { ChatSession, DiagnosisResult } from "@agrisense/shared";
+import type { ChatSession, DiagnosisResult } from "@harvest-ai/shared";
 import { DIAGNOSIS_CONSTANTS } from "../constants/diagnosis.constants";
 import { getCurrentLanguage } from "./useLanguage";
 import { generateUUID } from "../utils";

@@ -4,7 +4,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import { WeatherNotificationService } from '../../services/weather/weatherNotification.service.js';
 import { formatApiResponse, formatApiError, ValidationError } from '../../utils/apiResponse.util.js';
 import { requireEnv } from '../../utils/env.util.js';
-import { SubscribeNotificationRequest, SubscribeNotificationResponse } from '@agrisense/shared';
+import { SubscribeNotificationRequest, SubscribeNotificationResponse } from '@harvest-ai/shared';
 
 const notificationService = new WeatherNotificationService({
   topicArn: requireEnv('SNS_ALERT_TOPIC_ARN'),

@@ -3,7 +3,7 @@ const MOCK_BUCKET = "harvest-ai-media-mock";
 
 export async function mockGeneratePresignedUrl(
   fileName: string,
-  fileType: string
+  _fileType: string
 ): Promise<string> {
   // Simulate presigned URL
   // In real app: https://bucket.s3.amazonaws.com/path?X-Amz-Signature=...

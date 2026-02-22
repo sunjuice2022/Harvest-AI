@@ -22,7 +22,7 @@ If you don't want to set up AWS yet, you can test the full system with **mocks**
 Create [backend/src/services/diagnosis/bedrock.mock.ts](backend/src/services/diagnosis/bedrock.mock.ts):
 
 ```typescript
-import type { DiagnosisResult } from "@agrisense/shared";
+import type { DiagnosisResult } from "@harvest-ai/shared";
 
 export async function mockDiagnoseCrop(
   message: string,
@@ -136,7 +136,7 @@ export async function mockDiagnoseCrop(
 Create [backend/src/services/diagnosis/dynamodb.mock.ts](backend/src/services/diagnosis/dynamodb.mock.ts):
 
 ```typescript
-import type { ChatSession, ChatMessage } from "@agrisense/shared";
+import type { ChatSession, ChatMessage } from "@harvest-ai/shared";
 
 // In-memory storage (replaces DynamoDB)
 const mockDatabase = new Map<string, any>();
@@ -233,7 +233,7 @@ Create [backend/src/services/diagnosis/s3.mock.ts](backend/src/services/diagnosi
 
 ```typescript
 // Mock S3 presigned URLs
-const MOCK_BUCKET = "agrisense-media-mock";
+const MOCK_BUCKET = "harvest-ai-media-mock";
 
 export async function mockGeneratePresignedUrl(
   fileName: string,
@@ -268,7 +268,7 @@ Create [backend/src/server.mock.ts](backend/src/server.mock.ts):
 ```typescript
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import type { ChatSession, ChatMessage } from "@agrisense/shared";
+import type { ChatSession, ChatMessage } from "@harvest-ai/shared";
 import { mockDiagnoseCrop } from "./services/diagnosis/bedrock.mock";
 import {
   mockGetSession,
@@ -556,7 +556,7 @@ curl -X POST http://localhost:3000/api/diagnosis/upload \
 ```json
 {
   "uploadId": "upload-1234567890",
-  "presignedUrl": "https://agrisense-media-mock.s3.amazonaws.com/diagnosis/1234567890/tomato-leaf.jpg?mock-presigned=true&expires-in=600",
+  "presignedUrl": "https://harvest-ai-media-mock.s3.amazonaws.com/diagnosis/1234567890/tomato-leaf.jpg?mock-presigned=true&expires-in=600",
   "expiresIn": 600
 }
 ```

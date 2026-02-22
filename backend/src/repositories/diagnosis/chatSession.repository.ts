@@ -6,14 +6,14 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DIAGNOSIS_CONSTANTS } from '../../constants/diagnosis.constants';
 import { toChatSession, toChatSessionItem, type ChatSessionItem } from '../../models/diagnosis/chatSession.model';
-import type { ChatSession } from '@agrisense/shared';
+import type { ChatSession } from '@harvest-ai/shared';
 
 export class ChatSessionRepository {
   private docClient: DynamoDBDocumentClient;
   private tableName: string;
 
   constructor(region?: string) {
-    const client = new DynamoDBClient({ region: region || process.env.AWS_REGION });
+    const client = new DynamoDBClient({ region: region ?? process.env.AWS_REGION ?? 'ap-southeast-2' });
     this.docClient = DynamoDBDocumentClient.from(client);
     this.tableName = DIAGNOSIS_CONSTANTS.CHAT_SESSIONS_TABLE;
   }

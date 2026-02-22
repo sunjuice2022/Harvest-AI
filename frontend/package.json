@@ -1,5 +1,5 @@
 {
-  "name": "@agrisense/frontend",
+  "name": "@harvest-ai/frontend",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -8,10 +8,10 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src"
   },
   "dependencies": {
-    "@agrisense/shared": "*",
+    "@harvest-ai/shared": "*",
     "i18next": "^25.8.11",
     "i18next-browser-languagedetector": "^8.2.1",
     "react": "^19.0.0",

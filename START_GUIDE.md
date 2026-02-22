@@ -1,4 +1,4 @@
-# AgriSense AI — Start Guide
+# Harvest AI — Start Guide
 
 Everything you need to run, develop, and deploy the project.
 
@@ -35,7 +35,7 @@ Everything you need to run, develop, and deploy the project.
 
 ```bash
 git clone <repository-url>
-cd agrisense-ai
+cd harvest-ai
 
 # Install all workspace dependencies (frontend + backend + shared + infrastructure)
 npm install
@@ -134,7 +134,7 @@ npm run dev -w frontend
 ## 5. Project Structure
 
 ```
-agrisense-ai/
+harvest-ai/
 ├── frontend/                   # React 19 + Vite + TypeScript
 │   └── src/
 │       ├── components/         # Reusable UI components
@@ -164,7 +164,7 @@ agrisense-ai/
 │
 ├── infrastructure/             # AWS CDK stacks
 │   └── lib/
-│       ├── agrisense-stack.ts  # Main stack
+│       ├── harvest-ai-stack.ts  # Main stack
 │       └── constructs/         # CDK constructs per domain
 │
 ├── docs/                       # PRD, design guide, coding rules
@@ -180,8 +180,10 @@ agrisense-ai/
 
 | Route | Feature | Description |
 |-------|---------|-------------|
-| `/` | Home | Landing page with navbar, background photo, feature cards |
-| `/weather` | Weather Agent | 7-day forecast, SNS threshold alerts, Bedrock daily advisory, location picker, alert subscriptions |
+| `/` | Home | Landing page with auth-aware navbar, background photo, feature cards |
+| `/login` | Sign In | Email + password sign-in form (mock auth, ready for Cognito) |
+| `/signup` | Sign Up | Name, email, password registration form |
+| `/weather` | Weather Agent | 7-day forecast, SNS threshold alerts, Bedrock advisory + weather outlook, location picker, alert subscriptions |
 | `/diagnosis` | AI Crop Diagnosis | Chatbot — upload photo + describe symptoms, get instant AI diagnosis |
 | `/farm-recommendation` | Farm Planner | AI-powered crop schedule and planting recommendations |
 | `/market` | Market Price Intelligence | Real-time crop market prices |
@@ -189,12 +191,25 @@ agrisense-ai/
 
 ### Weather Page — Key Features
 
-- **Location picker** — switch between 6 Australian cities
+- **Location picker** — styled dropdown with 35 Australian cities across all states and territories (NSW, VIC, QLD, WA, SA, TAS, NT, ACT), grouped by state using `<optgroup>`
 - **Weather Agent Status** — current conditions (temp, humidity, wind, UV index)
 - **SNS Threshold Alerts** — real-time alerts for high temp (>35°C), frost (<5°C), flood (>50mm rain), drought (7+ dry days)
-- **Daily Farming Advisory** — AI-generated 6-sentence farming advice (Bedrock), with static fallback if Bedrock is not configured
+- **Daily Farming Advisory** — AI-generated farming advice (Bedrock), with static fallback if Bedrock is not configured
+- **7-Day Weather Outlook** — plain-language forecast block derived from the 7-day forecast data (rain, frost, heat stress, humidity, wind, irrigation, best operating day)
 - **7-Day Forecast** — scrollable strip with condition icons, high/low temps, rainfall
 - **Alert Subscriptions** — subscribe by email or SMS (powered by AWS SNS)
+- **Advisory Actions** — "Acknowledge" dismisses the alert; "Adjust Schedule" navigates to the Farm Planner
+
+### Authentication
+
+The Home page navbar is auth-aware:
+
+- **Signed out:** shows "Log In" link → navigates to `/login`
+- **Signed in:** shows the user's name and a "Sign Out" button
+- Session is persisted in `localStorage` — survives page refresh
+- Sign up at `/signup` — automatically signs in on success
+
+> Current auth is **UI-only (mock)**. No AWS backend calls are made. To integrate AWS Cognito, replace the `useAuth` hook implementation in `frontend/src/hooks/useAuth.ts`.
 
 ---
 

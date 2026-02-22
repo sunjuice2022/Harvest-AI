@@ -1,6 +1,6 @@
 /** System prompts and instruction templates for the Weather Agent. */
 
-export const WEATHER_AGENT_SYSTEM_PROMPT = `You are the Weather Intelligence Agent for AgriSense AI, an agricultural platform.
+export const WEATHER_AGENT_SYSTEM_PROMPT = `You are the Weather Intelligence Agent for Harvest AI, an agricultural platform.
 
 Your responsibilities:
 1. Analyze weather forecast data for a farmer's location.

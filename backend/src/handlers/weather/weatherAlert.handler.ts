@@ -9,7 +9,7 @@ import { WeatherNotificationService } from '../../services/weather/weatherNotifi
 import { WeatherBedrockService } from '../../services/weather/weatherBedrock.service.js';
 import { formatApiResponse, formatApiError, ValidationError } from '../../utils/apiResponse.util.js';
 import { requireEnv, optionalEnv } from '../../utils/env.util.js';
-import { GetAlertsResponse, AcknowledgeAlertResponse } from '@agrisense/shared';
+import { GetAlertsResponse, AcknowledgeAlertResponse } from '@harvest-ai/shared';
 
 const alertRepository = new WeatherAlertRepository();
 const weatherService = new WeatherService({

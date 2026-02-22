@@ -1,6 +1,6 @@
 # Implementation Plan
 
-## AgriSense AI — Phased Development Plan
+## Harvest AI — Phased Development Plan
 
 | Field            | Detail                              |
 | ---------------- | ----------------------------------- |

@@ -10,14 +10,14 @@ import {
   MarketInsightRequest,
   MarketInsightResponse,
   MarketRecommendation,
-} from "@agrisense/shared";
+} from "@harvest-ai/shared";
 import {
   MARKET_PRICE_SYSTEM_PROMPT,
   MARKET_PRICE_MODEL_ID,
   MARKET_PRICE_MAX_TOKENS,
 } from "../../constants/marketPrice.constants";
 import { LANGUAGE_NAMES } from "../../constants/voice.constants";
-import type { VoiceLanguageCode } from "@agrisense/shared";
+import type { VoiceLanguageCode } from "@harvest-ai/shared";
 
 export class MarketPriceService {
   constructor(private readonly bedrock: BedrockRuntimeClient) {}

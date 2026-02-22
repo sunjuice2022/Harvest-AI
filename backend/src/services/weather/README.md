@@ -1,6 +1,6 @@
 # Weather Intelligence Agent
 
-AI-powered weather monitoring and advisory service for AgriSense AI. Fetches real-time forecasts, detects threshold-based alert conditions, sends notifications via SNS, and generates Claude-powered recommendations and daily farming advisories via AWS Bedrock.
+AI-powered weather monitoring and advisory service for Harvest AI. Fetches real-time forecasts, detects threshold-based alert conditions, sends notifications via SNS, and generates Claude-powered recommendations and daily farming advisories via AWS Bedrock.
 
 ---
 
@@ -156,7 +156,7 @@ npm run test:local
 
 **Expected output (no alerts):**
 ```
-🌾  AgriSense Weather Agent — Local Integration Test
+🌾  Harvest AI Weather Agent — Local Integration Test
 ════════════════════════════════════════════════════
 📍  Location : lat=-37.8136, lng=144.9631
 ...
@@ -213,7 +213,7 @@ When alerts are detected and `SNS_ALERT_TOPIC_ARN` is set:
 
 **Email** (via topic subscription):
 ```
-Subject: [AgriSense] WARNING Weather Alert
+Subject: [Harvest AI] WARNING Weather Alert
 Body:    High temperature alert: 37°C forecast
 
          Recommendation: Increase irrigation frequency and apply shade nets if available.
@@ -221,5 +221,5 @@ Body:    High temperature alert: 37°C forecast
 
 **SMS** (when `ALERT_PHONE_NUMBER` is set):
 ```
-[AgriSense] High temperature alert: 37°C forecast
+[Harvest AI] High temperature alert: 37°C forecast
 ```

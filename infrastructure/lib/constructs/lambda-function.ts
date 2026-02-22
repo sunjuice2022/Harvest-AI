@@ -1,4 +1,4 @@
-/** Reusable Lambda construct — NodejsFunction with esbuild bundling and standard AgriSense config. */
+/** Reusable Lambda construct — NodejsFunction with esbuild bundling and standard Harvest AI config. */
 
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
@@ -6,7 +6,7 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as path from 'path';
 
-export interface AgriSenseLambdaProps {
+export interface HarvestLambdaProps {
   stage: string;
   name: string;
   /** Path to the TypeScript entry file, relative to the repo root. */
@@ -18,22 +18,22 @@ export interface AgriSenseLambdaProps {
   memorySize?: number;
 }
 
-export class AgriSenseLambda extends Construct {
+export class HarvestLambda extends Construct {
   readonly fn: NodejsFunction;
 
-  constructor(scope: Construct, id: string, props: AgriSenseLambdaProps) {
+  constructor(scope: Construct, id: string, props: HarvestLambdaProps) {
     super(scope, id);
 
     const repoRoot = path.resolve(__dirname, '..', '..', '..');
 
     this.fn = new NodejsFunction(this, 'Fn', {
-      functionName: `AgriSense-${props.stage}-${props.name}`,
+      functionName: `HarvestAI-${props.stage}-${props.name}`,
       entry: path.join(repoRoot, props.entry),
       handler: props.handler,
       runtime: Runtime.NODEJS_22_X,
       memorySize: props.memorySize ?? 256,
       timeout: props.timeout ?? cdk.Duration.seconds(30),
-      environment: props.environment,
+      ...(props.environment !== undefined ? { environment: props.environment } : {}),
       bundling: {
         externalModules: ['@aws-sdk/*'],
         sourceMap: props.stage !== 'prod',

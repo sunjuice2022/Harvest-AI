@@ -11,7 +11,7 @@ import type {
   CropRecommendation,
   LivestockRecommendation,
   VoiceLanguageCode,
-} from "@agrisense/shared";
+} from "@harvest-ai/shared";
 
 const SYSTEM_PROMPT = `You are an expert agricultural planning advisor helping farmers in all regions plan profitable, sustainable farms.
 

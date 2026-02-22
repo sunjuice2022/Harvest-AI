@@ -5,6 +5,8 @@
 import {
   TranscribeStreamingClient,
   StartStreamTranscriptionCommand,
+  type LanguageCode,
+  type TranscriptResultStream,
 } from "@aws-sdk/client-transcribe-streaming";
 import { VOICE_CONSTANTS } from "../../constants/voice.constants";
 
@@ -25,7 +27,7 @@ export class VoiceService {
     const audioStream = this.buildAudioStream(audioBuffer);
 
     const command = new StartStreamTranscriptionCommand({
-      LanguageCode: languageCode,
+      LanguageCode: languageCode as LanguageCode,
       MediaSampleRateHertz: VOICE_CONSTANTS.SAMPLE_RATE_HZ,
       MediaEncoding: VOICE_CONSTANTS.MEDIA_ENCODING,
       AudioStream: audioStream,
@@ -43,7 +45,7 @@ export class VoiceService {
   }
 
   private async collectTranscript(
-    stream: AsyncIterable<{ TranscriptEvent?: { Transcript?: { Results?: Array<{ Alternatives?: Array<{ Transcript?: string }>; IsPartial?: boolean }> } } }> | undefined,
+    stream: AsyncIterable<TranscriptResultStream> | undefined,
   ): Promise<string> {
     if (!stream) return "";
     const parts: string[] = [];

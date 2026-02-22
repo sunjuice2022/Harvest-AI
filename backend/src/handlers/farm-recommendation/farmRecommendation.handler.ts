@@ -2,7 +2,7 @@
  * Lambda handler for POST /api/farm-recommendation
  */
 
-import type { FarmRecommendationRequest } from '@agrisense/shared';
+import type { FarmRecommendationRequest } from '@harvest-ai/shared';
 import { FarmRecommendationService } from '../../services/farm-recommendation/farmRecommendation.service';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,

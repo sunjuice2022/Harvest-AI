@@ -18,7 +18,7 @@ import { WeatherAgent } from '../src/agents/weather/weather.agent.js';
 import type { WeatherAlertRepository } from '../src/repositories/weather/weatherAlert.repository.js';
 import type { CreateAlertInput } from '../src/services/weather/weather.types.js';
 import type { AlertRecommendation } from '../src/agents/weather/weather.types.js';
-import type { WeatherForecast } from '@agrisense/shared';
+import type { WeatherForecast } from '@harvest-ai/shared';
 
 loadEnvFile();
 
@@ -45,7 +45,7 @@ const snsTopicArn = process.env['SNS_ALERT_TOPIC_ARN'];
 const mockNotificationService = {
   async sendAlertNotifications(alerts: AlertRecommendation[]): Promise<void> {
     for (const alert of alerts) {
-      console.log(`  📧  [Mock SNS Email] Subject: [AgriSense] ${alert.severity.toUpperCase()} Weather Alert`);
+      console.log(`  📧  [Mock SNS Email] Subject: [Harvest AI] ${alert.severity.toUpperCase()} Weather Alert`);
       console.log(`       Body: ${alert.message}`);
       console.log(`  📱  [Mock SNS SMS]   ${alert.message}`);
     }
@@ -100,7 +100,7 @@ const agent = new WeatherAgent(agentTools);
 const lat = Number(process.env['DEFAULT_FARM_LAT'] ?? -37.8136);
 const lng = Number(process.env['DEFAULT_FARM_LNG'] ?? 144.9631);
 
-console.log('\n🌾  AgriSense Weather Agent — Local Integration Test');
+console.log('\n🌾  Harvest AI Weather Agent — Local Integration Test');
 console.log('═'.repeat(52));
 console.log(`📍  Location : lat=${lat}, lng=${lng}`);
 console.log(`🔑  API Key  : ${apiKey.slice(0, 8)}...`);

@@ -1,6 +1,6 @@
 /** Displays current weather conditions as a glassmorphism card. */
 
-import { CurrentWeather } from '@agrisense/shared';
+import { CurrentWeather } from '@harvest-ai/shared';
 import styles from './WeatherCard.module.css';
 
 interface WeatherCardProps {
@@ -8,7 +8,7 @@ interface WeatherCardProps {
   locationName?: string;
 }
 
-export function WeatherCard({ current, locationName }: WeatherCardProps): JSX.Element {
+export function WeatherCard({ current, locationName }: WeatherCardProps) {
   return (
     <div className={styles.card} role="region" aria-label="Current weather conditions">
       {locationName && <p className={styles.location}>{locationName}</p>}
@@ -37,7 +37,7 @@ interface WeatherStatProps {
   value: string;
 }
 
-function WeatherStat({ label, value }: WeatherStatProps): JSX.Element {
+function WeatherStat({ label, value }: WeatherStatProps) {
   return (
     <div className={styles.stat}>
       <span className={styles.statLabel}>{label}</span>

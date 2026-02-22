@@ -1,6 +1,6 @@
 /** Dismissible alert banner card with severity color coding for weather alerts. */
 
-import { WeatherAlert } from '@agrisense/shared';
+import { WeatherAlert } from '@harvest-ai/shared';
 import { ALERT_SEVERITY_COLORS, ALERT_TYPE_LABELS } from '../../constants/weather.constants.js';
 import styles from './AlertBanner.module.css';
 
@@ -9,7 +9,7 @@ interface AlertBannerProps {
   onDismiss: (alertId: string) => void;
 }
 
-export function AlertBanner({ alert, onDismiss }: AlertBannerProps): JSX.Element {
+export function AlertBanner({ alert, onDismiss }: AlertBannerProps) {
   const severityColor = ALERT_SEVERITY_COLORS[alert.severity] ?? 'var(--color-warning)';
   const typeLabel = ALERT_TYPE_LABELS[alert.type] ?? alert.type;
 

@@ -2,7 +2,7 @@
  * Diagnosis API helpers — low-level fetch wrappers used by useDiagnosis hook
  */
 
-import type { DiagnosisResponse, DiagnosisResult, ChatSession } from "@agrisense/shared";
+import type { DiagnosisResponse, DiagnosisResult, ChatSession } from "@harvest-ai/shared";
 import { generateUUID } from "../utils";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
@@ -39,7 +39,7 @@ export function updateSessionWithMessages(
     ...session,
     messages: [
       ...session.messages,
-      { id: generateUUID(), role: "user", content: message, imageUrl, timestamp: Date.now() },
+      { id: generateUUID(), role: "user" as const, content: message, ...(imageUrl !== undefined ? { imageUrl } : {}), timestamp: Date.now() },
       {
         id: data.messageId,
         role: "assistant",

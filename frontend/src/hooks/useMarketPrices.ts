@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
-import type { Commodity, CommodityCategory, MarketPricesResponse } from "@agrisense/shared";
+import type { Commodity, CommodityCategory, MarketPricesResponse } from "@harvest-ai/shared";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 

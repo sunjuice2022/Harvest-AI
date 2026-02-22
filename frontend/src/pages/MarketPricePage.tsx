@@ -5,7 +5,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { CommodityCategory, Commodity } from "@agrisense/shared";
+import type { CommodityCategory, Commodity } from "@harvest-ai/shared";
 import { useMarketPrices } from "../hooks/useMarketPrices";
 import { useMarketInsight } from "../hooks/useMarketInsight";
 import { TrendChartCard } from "../components/market-price/TrendChartCard";

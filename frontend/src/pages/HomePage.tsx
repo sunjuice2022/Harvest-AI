@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth.js";
 import "./HomePage.css";
 
 interface Feature {
@@ -143,7 +144,10 @@ const NAV_LINKS: NavLink[] = [
   },
 ];
 
-const HomePage: React.FC = () => (
+const HomePage: React.FC = () => {
+  const { user, signOut } = useAuth();
+
+  return (
   <div className="home-page">
     {/* ── Navbar ── */}
     <nav className="home-nav" aria-label="Main navigation">
@@ -174,19 +178,26 @@ const HomePage: React.FC = () => (
         </ul>
 
         <div className="home-nav__actions">
+          <Link to="/demo" className="home-nav__demo">🏆 Demo</Link>
           <span className="home-nav__divider" aria-hidden="true">|</span>
-          <a href="#" className="home-nav__login">Log In</a>
+          {user ? (
+            <>
+              <span className="home-nav__user">👤 {user.name}</span>
+              <button type="button" className="home-nav__signout" onClick={signOut}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="home-nav__login">Log In</Link>
+          )}
         </div>
       </div>
     </nav>
 
-    <Link to="/settings" className="home-settings-link" aria-label="Settings">
-      ⚙️
-    </Link>
     <header className="home-hero">
       <div className="home-hero__logo">🌾</div>
-      <h1 className="home-hero__title">
-        Harvest <span>AI</span>
+      <h1 className="home-hero__slogan">
+        Grow smarter.<br /><span>Harvest more.</span>
       </h1>
       <p className="home-hero__subtitle">
         AI-powered tools to help farmers grow smarter, reduce loss, and maximise profit.
@@ -195,6 +206,7 @@ const HomePage: React.FC = () => (
         <span className="home-hero__meta-dot" />
         5 features live · 3 coming soon
       </div>
+      <Link to="/demo" className="home-hero__demo-cta">🏆 View Hackathon Demo</Link>
     </header>
 
     <main className="home-features">
@@ -210,6 +222,7 @@ const HomePage: React.FC = () => (
       © {new Date().getFullYear()} Harvest AI · Powered by Amazon Bedrock
     </footer>
   </div>
-);
+  );
+};
 
 export default HomePage;

@@ -3,7 +3,7 @@
  */
 
 import { useState, useCallback } from "react";
-import type { FarmRecommendationRequest, FarmRecommendationResponse } from "@agrisense/shared";
+import type { FarmRecommendationRequest, FarmRecommendationResponse } from "@harvest-ai/shared";
 import { getCurrentLanguage } from "./useLanguage";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";

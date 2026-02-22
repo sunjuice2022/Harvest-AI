@@ -1,4 +1,4 @@
-# AgriSense AI — AI Coding Assistant Instructions
+# Harvest AI — AI Coding Assistant Instructions
 
 Before writing any code in this project, read and follow these documents in order:
 
@@ -8,7 +8,7 @@ Before writing any code in this project, read and follow these documents in orde
 
 ## Project Overview
 
-AgriSense AI is an agentic AI agriculture platform on AWS with four domains:
+Harvest AI is an agentic AI agriculture platform on AWS with four domains:
 - **Weather** — forecast, alerts (high/low temp, flood, drought)
 - **Diagnosis** — photo upload chatbot for crop disease/pest/nutrient/stress detection
 - **News** — AI-curated agricultural news

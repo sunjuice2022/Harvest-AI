@@ -244,13 +244,13 @@ Get full session details including all messages.
 ```bash
 AWS_REGION=us-east-1
 CHAT_SESSIONS_TABLE=ChatSessions
-MEDIA_BUCKET=agrisense-media
+MEDIA_BUCKET=harvest-ai-media
 ```
 
 ### Frontend (.env)
 
 ```bash
-REACT_APP_API_URL=https://api.agrisense.example.com
+REACT_APP_API_URL=https://api.harvest-ai.example.com
 REACT_APP_AUTH_REGION=us-east-1
 ```
 

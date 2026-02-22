@@ -2,7 +2,7 @@
  * Diagnosis data models for storage and API contracts
  */
 
-import type { ChatSession, ChatMessage, DiagnosisResult } from "@agrisense/shared";
+import type { ChatSession, DiagnosisResult } from "@harvest-ai/shared";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
 
 export interface ChatSessionItem {
@@ -29,7 +29,7 @@ export function toChatSession(item: ChatSessionItem): ChatSession {
     sessionId: item.SK,
     userId: item.PK,
     messages: item.messages,
-    lastDiagnosis: item.lastDiagnosis,
+    ...(item.lastDiagnosis !== undefined ? { lastDiagnosis: item.lastDiagnosis } : {}),
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
@@ -42,7 +42,7 @@ export function toChatSessionItem(session: ChatSession): ChatSessionItem {
     PK: session.userId,
     SK: session.sessionId,
     messages: session.messages,
-    lastDiagnosis: session.lastDiagnosis,
+    ...(session.lastDiagnosis !== undefined ? { lastDiagnosis: session.lastDiagnosis } : {}),
     createdAt: session.createdAt,
     updatedAt: session.updatedAt,
     ttl,

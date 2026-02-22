@@ -4,7 +4,7 @@
 
 import React from "react";
 import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
-import type { Commodity } from "@agrisense/shared";
+import type { Commodity } from "@harvest-ai/shared";
 import { formatPrice } from "../../utils";
 import "./CommodityRow.css";
 

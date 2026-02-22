@@ -1,7 +1,7 @@
 /** Custom hook for fetching weather forecast and alerts, with auto-polling. */
 
 import { useState, useEffect, useCallback } from 'react';
-import { WeatherForecast, WeatherAlert } from '@agrisense/shared';
+import { WeatherForecast, WeatherAlert } from '@harvest-ai/shared';
 import {
   fetchWeatherForecast,
   fetchWeatherAlerts,

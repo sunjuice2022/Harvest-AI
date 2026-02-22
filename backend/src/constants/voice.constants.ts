@@ -2,7 +2,7 @@
  * Voice transcription constants and language name mapping (PRD §4.5)
  */
 
-import type { VoiceLanguageCode } from "@agrisense/shared";
+import type { VoiceLanguageCode } from "@harvest-ai/shared";
 
 export const VOICE_CONSTANTS = {
   SAMPLE_RATE_HZ: 16000,

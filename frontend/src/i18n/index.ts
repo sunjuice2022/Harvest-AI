@@ -5,7 +5,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { LANGUAGE_STORAGE_KEY, DEFAULT_LANGUAGE_CODE } from "@agrisense/shared";
+import { LANGUAGE_STORAGE_KEY, DEFAULT_LANGUAGE_CODE } from "@harvest-ai/shared";
 
 import en from "./locales/en.json";
 import zhCN from "./locales/zh-CN.json";

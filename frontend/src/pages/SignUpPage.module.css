@@ -1,0 +1,159 @@
+/* SignUpPage — same glassmorphism card as SignInPage */
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(to bottom, rgba(10, 40, 5, 0.55) 0%, rgba(8, 30, 3, 0.72) 100%),
+    url('/farm-bg.jpg') center / cover no-repeat fixed;
+  padding: var(--space-lg);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--glass-dark);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3xl) var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* ── Logo ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+
+.logoText { color: var(--color-white); }
+.logoAccent { color: var(--color-primary); }
+
+/* ── Heading ── */
+.title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--color-medium-gray);
+  margin: calc(var(--space-xs) * -1) 0 0;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.input {
+  width: 100%;
+  padding: 11px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-white);
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.input::placeholder { color: var(--color-medium-gray); }
+.input:focus { border-color: var(--color-primary); }
+.input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Error ── */
+.error {
+  font-size: 13px;
+  color: var(--color-alert-red);
+  margin: 0;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+}
+
+/* ── Buttons ── */
+.btnPrimary {
+  width: 100%;
+  padding: 12px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  box-shadow: 0 4px 20px rgba(132, 204, 22, 0.35);
+}
+
+.btnPrimary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Spinner ── */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Switch link ── */
+.switchText {
+  font-size: 13px;
+  color: var(--color-medium-gray);
+  text-align: center;
+  margin: 0;
+}
+
+.switchLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.switchLink:hover { opacity: 0.75; }

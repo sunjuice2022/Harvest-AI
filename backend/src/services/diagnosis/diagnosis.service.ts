@@ -6,7 +6,7 @@ import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-r
 import type { ContentBlock } from "@aws-sdk/client-bedrock-runtime";
 import { DIAGNOSIS_CONSTANTS } from "../../constants/diagnosis.constants";
 import { LANGUAGE_NAMES } from "../../constants/voice.constants";
-import type { DiagnosisResult, ChatMessage, VoiceLanguageCode } from "@agrisense/shared";
+import type { DiagnosisResult, ChatMessage, VoiceLanguageCode } from "@harvest-ai/shared";
 
 const SYSTEM_PROMPT_TEMPLATE = `You are an expert agricultural diagnostic AI assistant. Your role is to analyze crop images and text descriptions to identify:
 1. Plant diseases and infections
@@ -116,9 +116,9 @@ export class DiagnosisService {
       severity: (parsed.severity as "info" | "warning" | "critical") || this.severityFromConfidence(confidence),
       description: String(parsed.description) || "Diagnosis complete",
       treatment: Array.isArray(parsed.treatment) ? (parsed.treatment as string[]) : [],
-      organicAlternatives: Array.isArray(parsed.organicAlternatives) ? (parsed.organicAlternatives as string[]) : undefined,
-      preventionTips: Array.isArray(parsed.preventionTips) ? (parsed.preventionTips as string[]) : undefined,
-      affectedPlants: Array.isArray(parsed.affectedPlants) ? (parsed.affectedPlants as string[]) : undefined,
+      ...(Array.isArray(parsed.organicAlternatives) ? { organicAlternatives: parsed.organicAlternatives as string[] } : {}),
+      ...(Array.isArray(parsed.preventionTips) ? { preventionTips: parsed.preventionTips as string[] } : {}),
+      ...(Array.isArray(parsed.affectedPlants) ? { affectedPlants: parsed.affectedPlants as string[] } : {}),
       escalatedToExpert: confidence < 60,
     };
   }

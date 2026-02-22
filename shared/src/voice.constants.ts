@@ -15,4 +15,4 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
 ];
 
 export const DEFAULT_LANGUAGE_CODE: VoiceLanguageCode = "en-AU";
-export const LANGUAGE_STORAGE_KEY = "agrisense_language";
+export const LANGUAGE_STORAGE_KEY = "harvest_ai_language";

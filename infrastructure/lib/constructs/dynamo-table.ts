@@ -4,7 +4,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 
-export interface AgriSenseTableProps {
+export interface HarvestTableProps {
   tableName: string;
   partitionKey: dynamodb.Attribute;
   sortKey?: dynamodb.Attribute;
@@ -12,16 +12,16 @@ export interface AgriSenseTableProps {
   removalPolicy?: cdk.RemovalPolicy;
 }
 
-export class AgriSenseTable extends Construct {
+export class HarvestTable extends Construct {
   readonly table: dynamodb.Table;
 
-  constructor(scope: Construct, id: string, props: AgriSenseTableProps) {
+  constructor(scope: Construct, id: string, props: HarvestTableProps) {
     super(scope, id);
 
     this.table = new dynamodb.Table(this, 'Table', {
       tableName: props.tableName,
       partitionKey: props.partitionKey,
-      sortKey: props.sortKey,
+      ...(props.sortKey !== undefined ? { sortKey: props.sortKey } : {}),
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.RETAIN,
       pointInTimeRecovery: true,

@@ -6,14 +6,14 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { DIAGNOSIS_CONSTANTS } from '../../constants/diagnosis.constants';
-import type { PhotoUploadResponse } from '@agrisense/shared';
+import type { PhotoUploadResponse } from '@harvest-ai/shared';
 import { randomUUID } from 'crypto';
 import {
   APIGatewayProxyEvent, APIGatewayProxyResult,
   successResponse, errorResponse, extractUserId,
 } from '../../types/api/apiGateway.types';
 
-const s3Client = new S3Client({ region: process.env.AWS_REGION });
+const s3Client = new S3Client({ region: process.env.AWS_REGION ?? 'ap-southeast-2' });
 const bucketName = DIAGNOSIS_CONSTANTS.MEDIA_BUCKET;
 
 export async function uploadPhoto(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {

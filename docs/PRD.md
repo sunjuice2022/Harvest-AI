@@ -1,12 +1,12 @@
 # Product Requirements Document (PRD)
 
-## AgriSense AI — Agentic AI Platform for Agriculture
+## Harvest AI — Agentic AI Platform for Agriculture
 
 | Field            | Detail                              |
 | ---------------- | ----------------------------------- |
-| **Product Name** | AgriSense AI                        |
+| **Product Name** | Harvest AI                        |
 | **Version**      | 1.0                                 |
-| **Date**         | 2026-02-15                          |
+| **Date**         | 2026-02-21                          |
 | **Author**       | Jenny                               |
 | **Stack**        | AWS Cloud-Native, Agentic AI        |
 | **Target Users** | Farmers, Agronomists, Rural Communities |
@@ -15,7 +15,7 @@
 
 ## 1. Executive Summary
 
-AgriSense AI is a cloud-native, agentic AI platform designed to empower farmers with real-time agricultural intelligence. The platform combines weather monitoring, AI-powered crop diagnosis, agricultural news aggregation, and a community marketplace — all orchestrated by autonomous AI agents running on AWS.
+Harvest AI is a cloud-native, agentic AI platform designed to empower farmers with real-time agricultural intelligence. The platform combines weather monitoring, AI-powered crop diagnosis, agricultural news aggregation, and a community marketplace — all orchestrated by autonomous AI agents running on AWS.
 
 The system leverages an **agentic AI architecture** where specialized agents autonomously gather data, make decisions, and take actions on behalf of farmers — proactively alerting them to weather risks, diagnosing crop issues from photos, curating relevant news, and facilitating community interactions.
 
@@ -52,9 +52,10 @@ Farmers face significant challenges:
 | W-04 | Flood risk alert based on rainfall accumulation and regional data | P0 |
 | W-05 | Drought/dry weather alert based on consecutive dry days and soil moisture | P0 |
 | W-06 | Push notifications (mobile) and SMS alerts for critical weather events | P0 |
-| W-07 | Location-based auto-detection with manual override | P1 |
+| W-07 | Manual city selector — 35 Australian cities across all states/territories, grouped by state (GPS auto-detection deferred to a future release) | P1 |
 | W-08 | Historical weather data and trend visualization | P2 |
 | W-09 | Agent autonomously correlates weather patterns with crop calendars and provides actionable recommendations (e.g., "Delay planting by 3 days due to incoming frost") | P1 |
+| W-10 | 7-day weather outlook block in the advisory card — plain-language forecast derived from forecast data covering rain, frost, heat stress, humidity, wind, and best operating day | P1 |
 
 **Agentic Behavior:**
 - The Weather Agent runs on a schedule (every 30 minutes), fetches forecast data, evaluates alert thresholds, and autonomously decides whether to notify the farmer.
@@ -138,7 +139,7 @@ Farmers face significant challenges:
 
 ### 4.5 Multilingual Voice Assistant
 
-**Description:** A global language selector and voice input system that allows Australian farmers from diverse cultural backgrounds to use AgriSense AI in their preferred language. All AI responses are generated in the selected language. Voice input is captured via the browser microphone and transcribed using AWS Transcribe.
+**Description:** A global language selector and voice input system that allows Australian farmers from diverse cultural backgrounds to use Harvest AI in their preferred language. All AI responses are generated in the selected language. Voice input is captured via the browser microphone and transcribed using AWS Transcribe.
 
 **Supported Languages (Australia-focused):**
 
@@ -187,6 +188,26 @@ User selects language in Settings → Stored in DynamoDB preferences.language
 → Backend appends "Respond in [language]" to Claude system prompt
 → AI responds in farmer's language
 ```
+
+---
+
+### 4.6 Authentication UI
+
+**Description:** A UI-only sign-in/sign-up flow providing a complete user experience ahead of full AWS Cognito integration.
+
+| ID | Requirement | Priority |
+|----|-------------|----------|
+| A-01 | Sign-in page at `/login` — email + password form with validation | P1 |
+| A-02 | Sign-up page at `/signup` — name, email, password, confirm password with validation (min 8 chars, passwords must match) | P1 |
+| A-03 | Auth-aware navbar on Home page — shows "Log In" link when signed out; user name + "Sign Out" button when signed in | P1 |
+| A-04 | Session persistence across page refreshes via `localStorage` (`harvest_ai_user` key) | P1 |
+| A-05 | AWS Cognito integration — replace mock auth with real Cognito User Pools | P2 |
+
+**Current Implementation:**
+- Mock/UI-only — any valid non-empty credentials are accepted.
+- The `useAuth` hook manages auth state with `localStorage` persistence.
+- Design uses the existing glassmorphism card pattern and design tokens.
+- All routes (`/login`, `/signup`) are integrated into React Router.
 
 ---
 

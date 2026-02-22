@@ -107,6 +107,29 @@ jobs:
 
       - run: npm ci
 
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ap-southeast-2
+
+      # Read bucket + CloudFront values from CDK outputs — no manual GitHub vars needed
+      - name: Download CDK outputs
+        uses: actions/download-artifact@v4
+        with:
+          name: cdk-outputs-${{ needs.resolve-stage.outputs.stage }}
+          path: infrastructure
+
+      - name: Extract CDK outputs
+        id: cdk
+        run: |
+          STAGE="${{ needs.resolve-stage.outputs.stage }}"
+          STACK="HarvestAI-${STAGE}-Frontend"
+          BUCKET=$(jq -r --arg s "$STACK" '.[$s].FrontendBucketName' infrastructure/cdk-outputs.json)
+          DIST=$(jq -r --arg s "$STACK" '.[$s].CloudFrontDistributionId' infrastructure/cdk-outputs.json)
+          echo "bucket=$BUCKET" >> $GITHUB_OUTPUT
+          echo "dist=$DIST"     >> $GITHUB_OUTPUT
+
       - name: Build shared + frontend
         run: |
           npm run build -w shared
@@ -117,16 +140,10 @@ jobs:
           VITE_COGNITO_USER_POOL_ID:  ${{ secrets.COGNITO_USER_POOL_ID }}
           VITE_COGNITO_CLIENT_ID:     ${{ secrets.COGNITO_CLIENT_ID }}
 
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: ap-southeast-2
-
       # Hashed assets get long-lived cache; index.html is never cached
       - name: Sync hashed assets to S3
         run: |
-          aws s3 sync frontend/dist/ s3://${{ vars.FRONTEND_BUCKET_NAME }}/ \
+          aws s3 sync frontend/dist/ s3://${{ steps.cdk.outputs.bucket }}/ \
             --delete \
             --exclude "index.html" \
             --cache-control "public,max-age=31536000,immutable"
@@ -134,14 +151,14 @@ jobs:
       - name: Upload index.html (no-cache)
         run: |
           aws s3 cp frontend/dist/index.html \
-            s3://${{ vars.FRONTEND_BUCKET_NAME }}/index.html \
+            s3://${{ steps.cdk.outputs.bucket }}/index.html \
             --cache-control "no-cache,no-store,must-revalidate"
 
       - name: Invalidate CloudFront distribution
-        if: vars.CLOUDFRONT_DIST_ID != ''
+        if: steps.cdk.outputs.dist != '' && steps.cdk.outputs.dist != 'null'
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ vars.CLOUDFRONT_DIST_ID }} \
+            --distribution-id ${{ steps.cdk.outputs.dist }} \
             --paths "/*"
 
   # ── 5. Post-deploy health checks ──────────────────────────────────────────

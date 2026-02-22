@@ -13,8 +13,8 @@ import type {
   FarmRecommendationRequest,
   MarketInsightRequest,
   VoiceLanguageCode,
-} from "@agrisense/shared";
-import { DEFAULT_LANGUAGE_CODE } from "@agrisense/shared";
+} from "@harvest-ai/shared";
+import { DEFAULT_LANGUAGE_CODE } from "@harvest-ai/shared";
 import { mockDiagnoseCrop } from "./mocks/bedrock.mock.js";
 import {
   mockGetSession,
@@ -40,7 +40,7 @@ import { VOICE_CONSTANTS } from "../src/constants/voice.constants";
 import { WeatherService } from "../src/services/weather/weather.service";
 import { WeatherBedrockService } from "../src/services/weather/weatherBedrock.service";
 import { WeatherNotificationService } from "../src/services/weather/weatherNotification.service";
-import type { WeatherAlert } from "@agrisense/shared";
+import type { WeatherAlert } from "@harvest-ai/shared";
 import { ALERT_THRESHOLDS } from "../src/constants/weather.constants";
 
 const USE_REAL_BEDROCK = process.env.USE_REAL_BEDROCK === "true";
@@ -507,7 +507,7 @@ app.get("/api/weather/forecast", async (req: Request, res: Response) => {
 });
 
 // GET /api/weather/alerts
-app.get("/api/weather/alerts", (req: Request, res: Response) => {
+app.get("/api/weather/alerts", (_req: Request, res: Response) => {
   const userId = res.locals.userId as string;
   const stored = (inMemoryAlerts.get(userId) ?? []).filter((a) => !a.acknowledged);
 

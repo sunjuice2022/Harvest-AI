@@ -5,7 +5,7 @@
  */
 
 import axios from "axios";
-import type { Commodity, PriceTrend } from "@agrisense/shared";
+import type { Commodity, PriceTrend } from "@harvest-ai/shared";
 
 interface WBPoint {
   date: string; // "YYYY-MM"

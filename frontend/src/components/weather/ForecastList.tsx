@@ -1,13 +1,13 @@
 /** Horizontal scrollable 7-day weather forecast list. */
 
-import { WeatherForecastDay } from '@agrisense/shared';
+import { WeatherForecastDay } from '@harvest-ai/shared';
 import styles from './ForecastList.module.css';
 
 interface ForecastListProps {
   days: WeatherForecastDay[];
 }
 
-export function ForecastList({ days }: ForecastListProps): JSX.Element {
+export function ForecastList({ days }: ForecastListProps) {
   return (
     <section aria-label="7-day weather forecast">
       <h2 className={styles.heading}>7-Day Forecast</h2>
@@ -24,7 +24,7 @@ interface ForecastDayCardProps {
   day: WeatherForecastDay;
 }
 
-function ForecastDayCard({ day }: ForecastDayCardProps): JSX.Element {
+function ForecastDayCard({ day }: ForecastDayCardProps) {
   const dayLabel = formatDayLabel(day.date);
 
   return (
