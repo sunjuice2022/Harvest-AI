@@ -92,7 +92,7 @@ export const acknowledgeAlertHandler: APIGatewayProxyHandler = async (event) => 
 
 function extractUserId(
   authorizer: Record<string, unknown> | null | undefined,
-  headers: Record<string, string> = {},
+  headers: Record<string, string | undefined> = {},
 ): string {
   const claims = authorizer?.['claims'] as Record<string, unknown> | undefined;
   const sub = claims?.['sub'];
