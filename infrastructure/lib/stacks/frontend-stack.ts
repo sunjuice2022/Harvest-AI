@@ -5,6 +5,11 @@ import { Construct } from 'constructs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+
+// ACM certificate ARN (must be in us-east-1 for CloudFront)
+const CERT_ARN = 'arn:aws:acm:us-east-1:567282577973:certificate/48e0f185-1175-4e24-9d3a-f2877473daec';
+const DOMAIN_NAMES = ['harvestai.com', 'www.harvestai.com'];
 
 export interface FrontendStackProps extends cdk.StackProps {
   stage: string;
@@ -34,9 +39,13 @@ export class FrontendStack extends cdk.Stack {
       originAccessControlName: `HarvestAI-${stage}-Frontend`,
     });
 
+    const certificate = acm.Certificate.fromCertificateArn(this, 'Certificate', CERT_ARN);
+
     return new cloudfront.Distribution(this, 'Distribution', {
       comment: `HarvestAI ${stage} frontend`,
       defaultRootObject: 'index.html',
+      domainNames: DOMAIN_NAMES,
+      certificate,
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(bucket, {
           originAccessControl: oac,
