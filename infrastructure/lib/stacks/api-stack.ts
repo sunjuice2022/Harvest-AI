@@ -138,7 +138,10 @@ export class ApiStack extends cdk.Stack {
 
   private addMarketPriceRoutes(stage: string, root: apigw.Resource): void {
     const marketFn = new HarvestLambda(this, 'MarketPriceFn', { stage, name: 'MarketPrice', entry: 'backend/src/handlers/market-price/marketPrice.handler.ts', handler: 'getMarketInsight', timeout: cdk.Duration.seconds(30), memorySize: 512, environment: { BEDROCK_MODEL_ID: 'anthropic.claude-3-5-sonnet-20241022-v2:0' } });
+    const marketPricesFn = new HarvestLambda(this, 'MarketPricesFn', { stage, name: 'MarketPrices', entry: 'backend/src/handlers/market-price/marketPrice.handler.ts', handler: 'getMarketPrices', timeout: cdk.Duration.seconds(30), memorySize: 512, environment: {} });
     marketFn.fn.addToRolePolicy(new iam.PolicyStatement({ actions: ['bedrock:InvokeModel'], resources: ['*'] }));
-    root.addResource('market-prices').addResource('insight').addMethod('POST', new apigw.LambdaIntegration(marketFn.fn));
+    const marketPrices = root.addResource('market-prices');
+    marketPrices.addMethod('GET', new apigw.LambdaIntegration(marketPricesFn.fn));
+    marketPrices.addResource('insight').addMethod('POST', new apigw.LambdaIntegration(marketFn.fn));
   }
 }

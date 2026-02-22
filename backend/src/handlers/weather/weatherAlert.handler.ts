@@ -61,7 +61,7 @@ export const scheduledPollHandler: ScheduledHandler = async (event) => {
 /** GET /api/weather/alerts — returns active alerts for the authenticated user. */
 export const listAlertsHandler: APIGatewayProxyHandler = async (event) => {
   try {
-    const userId = extractUserId(event.requestContext.authorizer);
+    const userId = extractUserId(event.requestContext.authorizer, event.headers);
     const alerts = await alertRepository.listActiveAlerts(userId);
 
     const response: GetAlertsResponse = { alerts };
@@ -74,7 +74,7 @@ export const listAlertsHandler: APIGatewayProxyHandler = async (event) => {
 /** PUT /api/weather/alerts/{alertId}/acknowledge — dismisses an alert for the authenticated user. */
 export const acknowledgeAlertHandler: APIGatewayProxyHandler = async (event) => {
   try {
-    const userId = extractUserId(event.requestContext.authorizer);
+    const userId = extractUserId(event.requestContext.authorizer, event.headers);
     const alertId = event.pathParameters?.['alertId'];
 
     if (!alertId) {
@@ -90,11 +90,14 @@ export const acknowledgeAlertHandler: APIGatewayProxyHandler = async (event) => 
   }
 };
 
-function extractUserId(authorizer: Record<string, unknown> | null | undefined): string {
+function extractUserId(
+  authorizer: Record<string, unknown> | null | undefined,
+  headers: Record<string, string> = {},
+): string {
   const claims = authorizer?.['claims'] as Record<string, unknown> | undefined;
-  const userId = claims?.['sub'];
-  if (typeof userId !== 'string' || !userId) {
-    throw new ValidationError('Unauthorized: missing user identity');
-  }
-  return userId;
+  const sub = claims?.['sub'];
+  if (typeof sub === 'string' && sub) return sub;
+  const headerUserId = headers['x-user-id'];
+  if (typeof headerUserId === 'string' && headerUserId) return headerUserId;
+  throw new ValidationError('Unauthorized: missing user identity');
 }

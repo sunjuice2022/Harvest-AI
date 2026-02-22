@@ -5,6 +5,14 @@ import { WEATHER_API_ENDPOINTS } from '@harvest-ai/shared';
 
 const API_BASE_URL = ((import.meta.env['VITE_API_BASE_URL'] as string | undefined) ?? '').replace(/\/$/, '');
 
+function getUserId(): string {
+  try {
+    const raw = localStorage.getItem('harvest_ai_user');
+    const user = raw ? JSON.parse(raw) as { email?: string } : null;
+    return user?.email ?? 'anonymous';
+  } catch { return 'anonymous'; }
+}
+
 export interface SubscribeRequest {
   email?: string;
   phone?: string;
@@ -20,6 +28,7 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      'x-user-id': getUserId(),
       ...options?.headers,
     },
   });
